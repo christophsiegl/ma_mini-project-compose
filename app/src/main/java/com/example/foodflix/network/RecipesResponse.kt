@@ -6,5 +6,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 class RecipesResponse {
-    //TODO(Fix the responses for the API)
+    @Json(name = "meals")
+    var meals: List<Meal> = listOf()
 }

@@ -1,7 +1,21 @@
 package com.example.foodflix.model
 
+import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.squareup.moshi.Json
+import kotlinx.parcelize.Parcelize
+@Parcelize
+@Entity(tableName = "recipes")
 data class Meal(
-    val mealName: String,
-    val mealID: String,
-    val ingredients: MutableList<String>
-)
+    @PrimaryKey()
+    @Json(name = "idMeal")
+    private val idMeal: String,
+    @ColumnInfo(name = "strMeal")
+    @Json(name = "strMeal")
+    val strMeal: String,
+    @ColumnInfo(name = "strMealThumb")
+    @Json(name = "strMealThumb")
+    val strMealThumb: String
+) : Parcelable

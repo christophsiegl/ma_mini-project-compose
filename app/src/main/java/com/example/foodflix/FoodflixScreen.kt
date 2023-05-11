@@ -13,6 +13,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.foodflix.ui.HomeScreen
 import com.example.foodflix.ui.LoginScreen
 import com.example.foodflix.ui.SearchScreen
+import com.example.foodflix.ui.theme.BrowseContent
+import com.example.foodflix.ui.theme.BrowseScreen
 
 enum class FoodflixScreen() {
     Login,
@@ -20,7 +22,8 @@ enum class FoodflixScreen() {
     Home,
     Recipe,
     Search,
-    ThingsAtHome
+    ThingsAtHome,
+    Browse
 }
 
 val quantityOptions = listOf(
@@ -59,12 +62,16 @@ fun FoodflixApp(modifier: Modifier = Modifier){
     // TODO: Get the name of the current screen
 
     Scaffold(
+
+
         topBar = {
             FoodflixAppBar(
                 canNavigateBack = false,
                 navigateUp = { /* TODO: implement back navigation */ }
             )
         }
+
+
     ) { innerPadding ->
         //val uiState by viewModel.uiState.collectAsState()
 
@@ -81,6 +88,9 @@ fun FoodflixApp(modifier: Modifier = Modifier){
                     },
                     onToLoginScreenClicked = {
                         navController.navigate(FoodflixScreen.Login.name)
+                    },
+                    onToBrowserScreenClicked = {
+                        navController.navigate(FoodflixScreen.Browse.name)
                     }
                 )
             }
@@ -96,6 +106,10 @@ fun FoodflixApp(modifier: Modifier = Modifier){
                     onToLoginScreenButtonClicked = {
                         navController.navigate(FoodflixScreen.Login.name)
                     }
+                )
+            }
+            composable(route = FoodflixScreen.Browse.name) {
+                BrowseScreen(
                 )
             }
         }

@@ -19,6 +19,7 @@ fun HomeScreen(
     quantityOptions: List<Pair<Int, Int>>,
     onToSearchScreenClicked: () -> Unit = {},
     onToLoginScreenClicked: () -> Unit = {},
+    onToBrowserScreenClicked: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
     Column(
@@ -43,6 +44,14 @@ fun HomeScreen(
             modifier = modifier.widthIn(min = 250.dp)
         ) {
             Text("To Login Screen")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = onToBrowserScreenClicked,
+            modifier = modifier.widthIn(min = 250.dp)
+        ) {
+            Text("To Browser Screen")
         }
         Spacer(modifier = Modifier.height(8.dp))
     }
