@@ -14,7 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,10 +32,13 @@ import com.example.foodflix.ui.SearchScreen
 import com.example.foodflix.ui.theme.Purple500
 import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import com.example.foodflix.ui.ProfileScreen
 import kotlinx.coroutines.CoroutineScope
 
-enum class FoodflixScreen() {
+enum class FoodflixScreen {
     Login,
     Profile,
     Home,
@@ -101,6 +109,8 @@ fun FoodflixApp(modifier: Modifier = Modifier){
         ),
     )
 
+    val drawerWidth = 200.dp
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -111,10 +121,11 @@ fun FoodflixApp(modifier: Modifier = Modifier){
                 scaffoldState
             )
         },
+        drawerShape = NavShape(drawerWidth, 0f),
         drawerContent = {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .width(drawerWidth)
                     .padding(start = 8.dp, top = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -142,7 +153,8 @@ fun FoodflixApp(modifier: Modifier = Modifier){
                 Spacer(modifier = Modifier.height(24.dp))
 
                 bottomNavItems.forEach { item ->
-                    val selected = item.route == navController.currentBackStackEntry?.destination?.route
+                    //val selected = item.route == navController.previousBackStackEntry?.destination?.route
+                    val selected = false
 
                     Card(
                         modifier = Modifier
@@ -221,3 +233,25 @@ fun FoodflixApp(modifier: Modifier = Modifier){
 }
 
 data class BottomNavItem(val name: String, val route: String, val icon: ImageVector)
+
+class NavShape(
+    private val widthOffset: Dp,
+    private val scale: Float
+) : Shape {
+
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        return Outline.Rectangle(
+            Rect(
+                Offset.Zero,
+                Offset(
+                    size.width * scale + with(density) { widthOffset.toPx() },
+                    size.height
+                )
+            )
+        )
+    }
+}
