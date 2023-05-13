@@ -19,7 +19,7 @@ class RecipeListViewModel(
     AndroidViewModel(application) {
 
     private val recipeRepository = RecipeRepositorySingleton.getInstance(RecipeDatabase.getDatabase(application))
-    val movieList = recipeRepository.movies
+    val movieList = recipeRepository.recipes
 
     private val _dataFetchStatus = MutableLiveData<DataFetchStatus>()
     val dataFetchStatus: LiveData<DataFetchStatus>

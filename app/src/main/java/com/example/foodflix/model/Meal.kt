@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 data class Meal(
     @PrimaryKey()
     @Json(name = "idMeal")
-    private val idMeal: String,
+    val idMeal: String,
     @ColumnInfo(name = "strMeal")
     @Json(name = "strMeal")
     val strMeal: String,

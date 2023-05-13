@@ -6,10 +6,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.foodflix.database.RecipeDatabase
+import com.example.foodflix.repository.RecipeRepository
+import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.ui.HomeScreen
 import com.example.foodflix.ui.LoginScreen
 import com.example.foodflix.ui.SearchScreen
@@ -61,6 +65,9 @@ fun FoodflixApp(modifier: Modifier = Modifier){
     // TODO: Get current back stack entry
     // TODO: Get the name of the current screen
 
+    val recipeRepository = RecipeRepositorySingleton.getInstance(
+        RecipeDatabase.getDatabase(LocalContext.current))
+
     Scaffold(
 
 
@@ -110,6 +117,7 @@ fun FoodflixApp(modifier: Modifier = Modifier){
             }
             composable(route = FoodflixScreen.Browse.name) {
                 BrowseScreen(
+                    recipeRepository = recipeRepository
                 )
             }
         }
