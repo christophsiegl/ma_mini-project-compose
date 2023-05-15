@@ -10,9 +10,7 @@ import kotlinx.coroutines.withContext
 
 
 class RecipeRepository(private val database: RecipeDatabase) {
-    private val recipesLiveData = MutableLiveData<List<Meal>>()
-    val recipes: LiveData<List<Meal>> = recipesLiveData
-
+    val recipes: LiveData<List<Meal>> = database.recipeDatabaseDao().getAllMoviesAsLiveData()
 
     private var _lastRequest: String? = null
     val lastRequest: String?

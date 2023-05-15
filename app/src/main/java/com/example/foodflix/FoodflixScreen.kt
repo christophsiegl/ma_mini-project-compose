@@ -17,8 +17,8 @@ import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.ui.HomeScreen
 import com.example.foodflix.ui.LoginScreen
 import com.example.foodflix.ui.SearchScreen
-import com.example.foodflix.ui.theme.BrowseContent
-import com.example.foodflix.ui.theme.BrowseScreen
+import com.example.foodflix.ui.BrowseContent
+import com.example.foodflix.ui.BrowseScreen
 
 enum class FoodflixScreen() {
     Login,

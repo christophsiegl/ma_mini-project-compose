@@ -56,12 +56,6 @@ class RecipeListViewModel(
             }
         }
     }
-
-
-
-
-
-
 /*
     fun onMovieListItemClicked(movie: Meal){
         _navigateToMovieDetail.value = movie
