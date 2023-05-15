@@ -12,19 +12,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ProfileScreen(
-    onToLoginScreenButtonClicked: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
-
     Column() {
-        Text(text = "Profile Screen")
+        Text(text = "Settings aka profile Screen")
         Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = onToLoginScreenButtonClicked,
-            modifier = modifier.widthIn(min = 250.dp)
-        ) {
-            Text("To Login Screen")
-        }
     }
 }
