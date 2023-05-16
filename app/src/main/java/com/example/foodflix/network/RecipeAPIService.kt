@@ -34,7 +34,7 @@ fun getLoggerIntercepter(): HttpLoggingInterceptor {
 
 interface RecipeAPIService {
     @GET("filter.php?a=Canadian")
-    suspend fun getMealsFromCanada(
+    suspend fun getCanadianMeals(
     ): RecipesResponse
     @GET("lookup.php?c={category}")
     suspend fun getMealsByCategory(

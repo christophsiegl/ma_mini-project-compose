@@ -18,13 +18,13 @@ interface RecipeDatabaseDao {
     suspend fun delete(meal: Meal)
 
     @Query("DELETE FROM recipes")
-    suspend fun deleteAllMovies()
+    suspend fun deleteAllRecipes()
 
     @Query("SELECT * from recipes ORDER BY idMeal ASC")
-    suspend fun getAllMovies(): List<Meal>
+    suspend fun getAllRecipes(): List<Meal>
 
     @Query("SELECT * from recipes ORDER BY idMeal ASC")
-    fun getAllMoviesAsLiveData(): LiveData<List<Meal>>
+    fun getAllRecipesAsLiveData(): LiveData<List<Meal>>
 
     @Query("SELECT EXISTS(SELECT * from recipes WHERE idMeal = :id)")
     suspend fun isFavourite(id: Long): Boolean

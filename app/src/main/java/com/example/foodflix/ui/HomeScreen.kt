@@ -1,7 +1,6 @@
 package com.example.foodflix.ui
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.dp
 fun HomeScreen(
     onToSearchScreenClicked: () -> Unit = {},
     onToLoginScreenClicked: () -> Unit = {},
-    onToBrowserScreenClicked: () -> Unit = {},
+    onToDiscoverScreenClicked: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
     Column(
@@ -46,7 +45,7 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = onToBrowserScreenClicked,
+            onClick = onToDiscoverScreenClicked,
             modifier = modifier.widthIn(min = 250.dp)
         ) {
             Text("To Browser Screen")

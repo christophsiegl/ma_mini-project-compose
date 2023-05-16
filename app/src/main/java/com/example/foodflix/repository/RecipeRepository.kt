@@ -1,7 +1,6 @@
 package com.example.foodflix.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.foodflix.database.RecipeDatabase
 import com.example.foodflix.model.Meal
 import com.example.foodflix.network.RecipeApi
@@ -11,7 +10,7 @@ import kotlinx.coroutines.withContext
 
 
 class RecipeRepository(private val database: RecipeDatabase) {
-    val recipes: LiveData<List<Meal>> = database.recipeDatabaseDao().getAllMoviesAsLiveData()
+    val recipes: LiveData<List<Meal>> = database.recipeDatabaseDao().getAllRecipesAsLiveData()
 
     private var _lastRequest: String? = null
     val lastRequest: String?
@@ -19,8 +18,8 @@ class RecipeRepository(private val database: RecipeDatabase) {
 
     suspend fun getCanadianRecipes() {
         withContext(Dispatchers.IO) {
-            database.recipeDatabaseDao().deleteAllMovies()
-            val popularMeals = RecipeApi.recipeListRetrofitService.getMealsFromCanada()
+            val popularMeals = RecipeApi.recipeListRetrofitService.getCanadianMeals()
+            database.recipeDatabaseDao().deleteAllRecipes() //delete after the meals are fetched!
             database.recipeDatabaseDao().insertAll(popularMeals.meals)
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES

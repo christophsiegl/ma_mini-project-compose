@@ -31,7 +31,6 @@ import com.example.foodflix.database.RecipeDatabase
 import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.ui.HomeScreen
 import com.example.foodflix.ui.LoginScreen
-import com.example.foodflix.ui.SearchScreen
 import com.example.foodflix.ui.theme.Purple500
 import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,16 +39,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import com.example.foodflix.ui.ProfileScreen
 import kotlinx.coroutines.CoroutineScope
-import com.example.foodflix.ui.BrowseScreen
+import com.example.foodflix.ui.DiscoverScreen
 
 enum class FoodflixScreen {
     Login,
     Profile,
     Home,
-    Search,
+    Discover,
     ThingsAtHome,
-    Browse,
-    Recipe
+    RecipeDetail
 }
 
 @Composable
@@ -104,7 +102,7 @@ fun FoodflixApp(modifier: Modifier = Modifier){
         ),
         BottomNavItem(
             name = stringResource(R.string.discover),
-            route = FoodflixScreen.Search.name,
+            route = FoodflixScreen.Discover.name,
             icon = Icons.Rounded.Search,
         ),
         BottomNavItem(
@@ -212,13 +210,13 @@ fun FoodflixApp(modifier: Modifier = Modifier){
                 HomeScreen(
                     //quantityOptions = quantityOptions, //can be used to pass arguments!!
                     onToSearchScreenClicked = {
-                        navController.navigate(FoodflixScreen.Search.name)
+                        navController.navigate(FoodflixScreen.Discover.name)
                     },
                     onToLoginScreenClicked = {
                         navController.navigate(FoodflixScreen.Login.name)
                     },
-                    onToBrowserScreenClicked = {
-                        navController.navigate(FoodflixScreen.Browse.name)
+                    onToDiscoverScreenClicked = {
+                        navController.navigate(FoodflixScreen.Discover.name)
                     }
                 )
             }
@@ -229,18 +227,11 @@ fun FoodflixApp(modifier: Modifier = Modifier){
                     }
                 )
             }
-            composable(route = FoodflixScreen.Search.name) {
-                SearchScreen(
-                    onToLoginScreenButtonClicked = {
-                        navController.navigate(FoodflixScreen.Login.name)
-                    }
-                )
+            composable(route = FoodflixScreen.Discover.name) {
+                DiscoverScreen()
             }
             composable(route = FoodflixScreen.Profile.name) {
                 ProfileScreen()
-            }
-            composable(route = FoodflixScreen.Browse.name) {
-                BrowseScreen()
             }
         }
     }
