@@ -28,7 +28,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.foodflix.database.RecipeDatabase
-import com.example.foodflix.repository.RecipeRepository
 import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.ui.HomeScreen
 import com.example.foodflix.ui.LoginScreen
@@ -41,7 +40,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import com.example.foodflix.ui.ProfileScreen
 import kotlinx.coroutines.CoroutineScope
-import com.example.foodflix.ui.BrowseContent
 import com.example.foodflix.ui.BrowseScreen
 
 enum class FoodflixScreen {
@@ -242,9 +240,7 @@ fun FoodflixApp(modifier: Modifier = Modifier){
                 ProfileScreen()
             }
             composable(route = FoodflixScreen.Browse.name) {
-                BrowseScreen(
-                    recipeRepository = recipeRepository
-                )
+                BrowseScreen()
             }
         }
     }

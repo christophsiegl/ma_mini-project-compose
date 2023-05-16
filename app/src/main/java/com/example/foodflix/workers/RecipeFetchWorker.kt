@@ -2,20 +2,18 @@ package com.example.foodflix.workers
 
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.util.Log
-import androidx.lifecycle.viewModelScope
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import com.example.foodflix.database.RecipeDatabase
 import com.example.foodflix.repository.RecipeRepositorySingleton
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
+    object RequestType {
+        const val GET_CANADIAN_RECIPES = "getCanadianRecipes"
+        const val GET_TOP_RATED_RECIPES = "getTopRatedRecipes"
+    }
 
     private val recipeRepository = RecipeRepositorySingleton.getInstance(RecipeDatabase.getDatabase(appContext))
 
@@ -25,7 +23,7 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
 
             // Call the API and get the recipes based on the request type
             when (requestType) {
-                "getPopularRecipes" -> {
+                RequestType.GET_CANADIAN_RECIPES -> {
                     recipeRepository.getCanadianRecipes()
                 }
                 else -> throw IllegalArgumentException("Invalid request type")

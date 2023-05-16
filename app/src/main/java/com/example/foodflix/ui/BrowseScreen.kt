@@ -15,48 +15,29 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.work.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foodflix.model.Meal
-import com.example.foodflix.repository.RecipeRepository
+import com.example.foodflix.viewmodel.RecipeListViewModel
+import com.example.foodflix.viewmodel.RecipeListViewModelFactory
 import com.example.foodflix.workers.RecipeFetchWorker
 
 @Composable
-fun BrowseScreen(modifier: Modifier = Modifier, recipeRepository: RecipeRepository) {
-    val recipesFromRepository by recipeRepository.recipes.observeAsState(emptyList())
-
-    val coroutineScope = rememberCoroutineScope()
-
-    val context = LocalContext.current
-    val workManager = WorkManager.getInstance(context)
+fun BrowseScreen(
+    modifier: Modifier = Modifier,
+    recipeViewModel: RecipeListViewModel = viewModel(factory = RecipeListViewModelFactory(LocalContext.current))
+){
+    val recipesFromViewModel by recipeViewModel.recipeList.observeAsState(emptyList())
 
     LaunchedEffect(Unit) {
-        //TODO: create method in viewModel for creating a request like in movieDBApp!
-        val inputData = Data.Builder()
-            .putString("requestType", "getPopularRecipes")
-            .build()
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        val request = OneTimeWorkRequestBuilder<RecipeFetchWorker>()
-            .setInputData(inputData)
-            .setConstraints(constraints)
-            .build()
-        // Enqueue the worker when entering the BrowseScreen
-        //val request = OneTimeWorkRequestBuilder<RecipeFetchWorker>().build()
-        workManager.enqueue(request)
+        recipeViewModel.createWorkManagerTask(RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES)
     }
 
     Column {
         Text(text = "Browse Screen")
         Spacer(modifier = Modifier.height(8.dp))
-        BrowseContent(recipes = recipesFromRepository)
+        BrowseContent(recipes = recipesFromViewModel)
     }
-
-
 }
 @Composable
 fun BrowseContent(recipes: List<Meal>) {

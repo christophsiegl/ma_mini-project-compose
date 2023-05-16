@@ -1,33 +1,35 @@
 package com.example.foodflix.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.ViewModel
 import androidx.work.*
 import com.example.foodflix.database.RecipeDatabase
-import com.example.foodflix.database.RecipeDatabaseDao
 import com.example.foodflix.model.Meal
 import com.example.foodflix.network.DataFetchStatus
+import com.example.foodflix.repository.RecipeRepository
 import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.workers.RecipeFetchWorker
-import kotlinx.coroutines.launch
 
 class RecipeListViewModel(
-    private val movieDatabaseDao: RecipeDatabaseDao, application: Application) :
-    AndroidViewModel(application) {
-
-    private val recipeRepository = RecipeRepositorySingleton.getInstance(RecipeDatabase.getDatabase(application))
-    val movieList = recipeRepository.recipes
+    context: Context,
+    repository: RecipeRepository = RecipeRepositorySingleton.getInstance(
+        RecipeDatabase.getDatabase(
+            context
+        )
+    )
+) : ViewModel() {
+    private val _workManager = WorkManager.getInstance(context)
+    private val _recipeList = repository.recipes
+    val recipeList: LiveData<List<Meal>>
+        get() = _recipeList
 
     private val _dataFetchStatus = MutableLiveData<DataFetchStatus>()
     val dataFetchStatus: LiveData<DataFetchStatus>
         get() {
             return _dataFetchStatus
         }
-
-    private val workManager = WorkManager.getInstance(application)
 
     private val _navigateToMovieDetail = MutableLiveData<Meal?>()
     val navigateToMovieDetail: MutableLiveData<Meal?>
@@ -36,35 +38,23 @@ class RecipeListViewModel(
         }
 
     init {
-        if(recipeRepository.lastRequest == null) {
-            createWorkManagerTask("getPopularMovies")
-        }
-        else {
-            createWorkManagerTask(recipeRepository.lastRequest!!)
+        if (repository.lastRequest == null) {
+            createWorkManagerTask(RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES)
+        } else {
+            createWorkManagerTask(repository.lastRequest!!)
         }
 
         _dataFetchStatus.value = DataFetchStatus.LOADING
     }
-
-    fun getCanadianRecipes(){
-        viewModelScope.launch {
-            try{
-                recipeRepository.getCanadianRecipes()
-                _dataFetchStatus.value = DataFetchStatus.DONE
-            } catch (e: Exception){
-                _dataFetchStatus.value = DataFetchStatus.ERROR
-            }
+    /*
+        fun onMovieListItemClicked(movie: Meal){
+            _navigateToMovieDetail.value = movie
         }
-    }
-/*
-    fun onMovieListItemClicked(movie: Meal){
-        _navigateToMovieDetail.value = movie
-    }
-    fun onMovieDetailNavigated(){
-        _navigateToMovieDetail.value = null
-    }
-*/
-    fun createWorkManagerTask(requestString: String){
+        fun onMovieDetailNavigated(){
+            _navigateToMovieDetail.value = null
+        }
+    */
+    fun createWorkManagerTask(requestString: String) {
         val inputData = Data.Builder()
             .putString("requestType", requestString)
             .build()
@@ -78,6 +68,6 @@ class RecipeListViewModel(
             .setConstraints(constraints)
             .build()
 
-        workManager.enqueue(request)
+        _workManager.enqueue(request)
     }
 }

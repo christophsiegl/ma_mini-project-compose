@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.foodflix.database.RecipeDatabase
 import com.example.foodflix.model.Meal
 import com.example.foodflix.network.RecipeApi
+import com.example.foodflix.workers.RecipeFetchWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -22,7 +23,7 @@ class RecipeRepository(private val database: RecipeDatabase) {
             val popularMeals = RecipeApi.recipeListRetrofitService.getMealsFromCanada()
             database.recipeDatabaseDao().insertAll(popularMeals.meals)
         }
-        _lastRequest = "popularMeals"
+        _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
 }
 
