@@ -7,11 +7,11 @@
 3. Constrained layout, Recycle View, Motion layout
 4. Seven screen fragments
 - Login page
-- Profile page (save favourite receipes, blacklist of bad ingredients)
-- Home page (show e.g. latest viewed/used receipes)
-- Recipe page (detailed page viewing the receipe)
-- Search page
-- "What Recipes can I make with the things I have at home" page
+- Settings page (profile related config, blacklist of bad ingredients, ...)
+- Home page (show e.g. latest viewed/used receipes/saved recipes)
+- Recipe detail page (detailed page viewing the receipe)
+- Discover page (for searching of recipes)
+- "What Recipes can I make with the things I have at home" page -> maybe integrate to discover page?
 - TBD
 5. Use at least three API calls
 
