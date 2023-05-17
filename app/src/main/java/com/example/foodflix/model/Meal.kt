@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "recipes")
 data class Meal(
-    @PrimaryKey()
+    @PrimaryKey
     @Json(name = "idMeal")
     val idMeal: String,
     @ColumnInfo(name = "strMeal")
@@ -17,9 +17,5 @@ data class Meal(
     val strMeal: String,
     @ColumnInfo(name = "strMealThumb")
     @Json(name = "strMealThumb")
-    val strMealThumb: String,
-
-    @ColumnInfo(name = "mealDetail")
-    val mealDetail: MealDetail
-
+    val strMealThumb: String
 ) : Parcelable

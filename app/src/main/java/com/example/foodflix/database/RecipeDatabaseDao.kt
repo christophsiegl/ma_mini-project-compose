@@ -20,11 +20,14 @@ interface RecipeDatabaseDao {
     //@Query("UPDATE recipes SET mealDetail =  :mealDetail WHERE idMeal = :id")
     //suspend fun insertDetails(mealDetail: MealDetail, id: Long)
 
-    @Insert
+    @Insert(entity = Meal::class)
     suspend fun insertAll(meal: List<Meal>)
 
-    @Delete
+    @Delete(entity = Meal::class)
     suspend fun delete(meal: Meal)
+
+    @Query("DELETE FROM recipeDetail")
+    suspend fun deleteAllRecipeDetails()
 
     @Query("DELETE FROM recipes")
     suspend fun deleteAllRecipes()
@@ -35,6 +38,12 @@ interface RecipeDatabaseDao {
     @Query("SELECT * from recipes ORDER BY idMeal ASC")
     fun getAllRecipesAsLiveData(): LiveData<List<Meal>>
 
+    @Query("SELECT * FROM recipeDetail")
+    fun getMealDetail(): LiveData<MealDetail>
+
     @Query("SELECT EXISTS(SELECT * from recipes WHERE idMeal = :id)")
     suspend fun isFavourite(id: Long): Boolean
+
+    @Query("SELECT * from recipeDetail")
+    fun getAllRecipeDetailsAsLiveData(): LiveData<MealDetail>
 }

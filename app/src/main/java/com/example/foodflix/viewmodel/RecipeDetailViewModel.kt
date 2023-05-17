@@ -11,6 +11,7 @@ import com.example.foodflix.database.RecipeDatabase
 import com.example.foodflix.database.RecipeDatabaseDao
 import com.example.foodflix.database.Recipes
 import com.example.foodflix.model.Meal
+import com.example.foodflix.model.MealDetail
 import com.example.foodflix.network.DataFetchStatus
 import com.example.foodflix.network.RecipeLookupResponse
 import com.example.foodflix.repository.RecipeRepository
@@ -55,13 +56,12 @@ class RecipeDetailViewModel(
         _dataFetchStatus.value = DataFetchStatus.LOADING
     }
 
-    private val _mealDetails = MutableLiveData<RecipeLookupResponse>()
-    val mealDetails: LiveData<RecipeLookupResponse>
+    private val _mealDetails = repository.recipeDetail
+    val mealDetails: LiveData<MealDetail>
         get() {
             return _mealDetails
         }
-
-    private fun createWorkManagerTask(requestString: String, mealID: String) {
+    fun createWorkManagerTask(requestString: String, mealID: String) {
         val inputData = Data.Builder()
             .putString("requestType", requestString)
             .putString("mealID", mealID)
