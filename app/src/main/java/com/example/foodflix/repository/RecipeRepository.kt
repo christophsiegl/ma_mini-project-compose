@@ -18,8 +18,8 @@ class RecipeRepository(private val database: RecipeDatabase) {
 
     suspend fun getCanadianRecipes() {
         withContext(Dispatchers.IO) {
-            val popularMeals = RecipeApi.recipeListRetrofitService.getCanadianMeals()
             database.recipeDatabaseDao().deleteAllRecipes() //delete after the meals are fetched!
+            val popularMeals = RecipeApi.recipeListRetrofitService.getCanadianMeals()
             database.recipeDatabaseDao().insertAll(popularMeals.meals)
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES

@@ -4,29 +4,37 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavArgument
+import androidx.navigation.NavController
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.foodflix.FoodflixScreen
 import com.example.foodflix.R
 import com.example.foodflix.model.Meal
 import com.example.foodflix.viewmodel.RecipeListViewModel
 import com.example.foodflix.viewmodel.RecipeListViewModelFactory
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-
 
 @Composable
 fun DiscoverScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     recipeViewModel: RecipeListViewModel = viewModel(factory = RecipeListViewModelFactory(LocalContext.current))
 ){
@@ -43,89 +51,47 @@ fun DiscoverScreen(
 
     Column {
         Spacer(modifier = Modifier.height(8.dp))
-        BrowseContent(recipes = recipesFromViewModel)
+        BrowseContent(recipes = recipesFromViewModel, navController)
     }
 }
-
-
 @Composable
-fun BrowseContent(recipes: List<Meal>) {
-    /*
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 128.dp)
-    ) {
-        items(items = recipes) {
-            RecipeListItem(meal = it)
-        }
-    }*/
-    /*
-    LazyVerticalGrid(
-        columns = StaggeredGridCells.Fixed(3),
-        verticalItemSpacing = 4.dp,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        content = {
-            items(randomSizedPhotos) { photo ->
-                AsyncImage(
-                    model = photo,
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().wrapContentHeight()
-                )
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    )
-    */
-/*
-    LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 128.dp),
+fun BrowseContent(recipes: List<Meal>, navController: NavController) {
+    LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 180.dp),
         contentPadding = PaddingValues(
-            start = 12.dp,
-            top = 16.dp,
-            end = 12.dp,
-            bottom = 16.dp
+            start = 2.dp,
+            top = 2.dp,
+            end = 2.dp,
+            bottom = 2.dp
         ),
         content = {
             items(recipes.size) {
-                Card(
-                    backgroundColor = Color.Red,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .fillMaxWidth(),
-                    elevation = 8.dp,
-                ) {
-                    Text(
-                        text = recipes[it].strMeal,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
-                        color = Color(0xFFFFFFFF),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
+                RecipeListItem(meal = recipes[it], navController)
             }
-        })*/
-
-    LazyColumn(
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-    ) {
-        items(items = recipes) {
-            RecipeListItem(meal = it)
-        }
-    }
+        })
 }
 
-
 @Composable
-fun RecipeListItem(meal: Meal) {
+fun RecipeListItem(meal: Meal, navController: NavController) {
     Row {
-        Column {
-            Image(
-                painter = rememberAsyncImagePainter(meal.strMealThumb),
-                contentDescription = stringResource(R.string.meal_picture_description),
-                modifier = Modifier.size(226.dp)
-            )
-            Text(text = meal.strMeal, style = MaterialTheme.typography.h6)
-            Text(text = "VIEW DETAIL", style = MaterialTheme.typography.caption)
+        Card(
+            backgroundColor = Color.Gray,
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth()
+                .clickable() {
+                    navController.navigate("${FoodflixScreen.RecipeDetail.name}/${meal.idMeal}")
+                },
+            elevation = 0.dp
+        ) {
+            Column {
+                Image(
+                    painter = rememberAsyncImagePainter(meal.strMealThumb),
+                    contentDescription = stringResource(R.string.meal_picture_description),
+                    modifier = Modifier.size(226.dp)
+                )
+                Text(text = meal.strMeal, style = MaterialTheme.typography.h6, fontSize = 18.sp)
+                Text(text = "VIEW DETAIL", style = MaterialTheme.typography.caption)
+            }
         }
     }
 }

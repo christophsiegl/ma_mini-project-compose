@@ -29,17 +29,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.foodflix.database.RecipeDatabase
 import com.example.foodflix.repository.RecipeRepositorySingleton
-import com.example.foodflix.ui.HomeScreen
-import com.example.foodflix.ui.LoginScreen
 import com.example.foodflix.ui.theme.Purple500
 import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
-import com.example.foodflix.ui.ProfileScreen
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.example.foodflix.ui.*
 import kotlinx.coroutines.CoroutineScope
-import com.example.foodflix.ui.DiscoverScreen
 
 enum class FoodflixScreen {
     Login,
@@ -228,10 +227,16 @@ fun FoodflixApp(modifier: Modifier = Modifier){
                 )
             }
             composable(route = FoodflixScreen.Discover.name) {
-                DiscoverScreen()
+                DiscoverScreen(navController = navController)
             }
             composable(route = FoodflixScreen.Profile.name) {
                 ProfileScreen()
+            }
+            composable(
+                route = "${FoodflixScreen.RecipeDetail.name}/{mealId}",
+                arguments = listOf(navArgument("mealId") { type = NavType.StringType })
+            ){
+                RecipeDetailScreen(navController = navController)
             }
         }
     }
