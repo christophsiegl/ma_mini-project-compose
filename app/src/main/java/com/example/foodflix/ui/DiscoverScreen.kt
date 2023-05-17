@@ -1,41 +1,39 @@
 package com.example.foodflix.ui
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.foodflix.R
 import com.example.foodflix.model.Meal
 import com.example.foodflix.viewmodel.RecipeListViewModel
 import com.example.foodflix.viewmodel.RecipeListViewModelFactory
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
 
 @Composable
 fun DiscoverScreen(
     modifier: Modifier = Modifier,
     recipeViewModel: RecipeListViewModel = viewModel(factory = RecipeListViewModelFactory(LocalContext.current))
 ){
+
+    if (!isNetworkConnected(LocalContext.current)) {
+        NoConnectionDialog()
+    }
     val recipesFromViewModel by recipeViewModel.recipeList.observeAsState(emptyList())
 
     // already done in the init of the ViewModel, but could be useful later
@@ -48,6 +46,8 @@ fun DiscoverScreen(
         BrowseContent(recipes = recipesFromViewModel)
     }
 }
+
+
 @Composable
 fun BrowseContent(recipes: List<Meal>) {
     /*
@@ -105,7 +105,6 @@ fun BrowseContent(recipes: List<Meal>) {
             }
         })*/
 
-
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
@@ -114,6 +113,7 @@ fun BrowseContent(recipes: List<Meal>) {
         }
     }
 }
+
 
 @Composable
 fun RecipeListItem(meal: Meal) {
@@ -128,4 +128,51 @@ fun RecipeListItem(meal: Meal) {
             Text(text = "VIEW DETAIL", style = MaterialTheme.typography.caption)
         }
     }
+}
+
+
+// Modified this: https://github.com/Foso/Jetpack-Compose-Playground/blob/master/app/src/main/java/de/jensklingenberg/jetpackcomposeplayground/mysamples/github/material/alertdialog/AlertDialogSample.kt
+@Composable
+fun NoConnectionDialog() {
+    MaterialTheme {
+        Column {
+            val openDialog = remember { mutableStateOf(true)  }
+
+            if (openDialog.value) {
+
+                AlertDialog(
+                    onDismissRequest = {
+                        // Dismiss the dialog when the user clicks outside the dialog or on the back
+                        // button. If you want to disable that functionality, simply use an empty
+                        // onCloseRequest.
+                        openDialog.value = false
+                    },
+                    title = {
+                        Text(text = "No Connection")
+                    },
+                    text = {
+                        Text("Please reconnect to the internet. ")
+                    },
+                    confirmButton = {
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = {
+                                openDialog.value = false
+                            }) {
+                            Text("Ok")
+                        }
+                    }
+                )
+            }
+        }
+
+    }
+}
+
+private fun isNetworkConnected(context: Context): Boolean {
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
