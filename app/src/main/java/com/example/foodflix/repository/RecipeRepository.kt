@@ -24,6 +24,13 @@ class RecipeRepository(private val database: RecipeDatabase) {
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
+
+    suspend fun getRecipeDetails(id: String) {
+        withContext(Dispatchers.IO) {
+            val mealDetail = RecipeApi.recipeListRetrofitService.getMealById(id)
+            database.recipeDatabaseDao().insertDetails(mealDetail.detailmeal.get(0), id.toLong())
+        }
+    }
 }
 
 object RecipeRepositorySingleton {

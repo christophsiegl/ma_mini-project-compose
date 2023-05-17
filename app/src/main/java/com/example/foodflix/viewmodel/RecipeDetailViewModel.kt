@@ -5,19 +5,32 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.work.WorkManager
+import androidx.lifecycle.ViewModel
+import androidx.work.*
+import com.example.foodflix.database.RecipeDatabase
+import com.example.foodflix.database.RecipeDatabaseDao
 import com.example.foodflix.database.Recipes
+import com.example.foodflix.model.Meal
 import com.example.foodflix.network.DataFetchStatus
 import com.example.foodflix.network.RecipeLookupResponse
+import com.example.foodflix.repository.RecipeRepository
+import com.example.foodflix.repository.RecipeRepositorySingleton
+import com.example.foodflix.workers.RecipeFetchWorker
 
 class RecipeDetailViewModel(
-    private val context: Context,
-    private val RecipeDatabaseDao: Context,
-    application: Application,
-    recipe: Recipes
-) : AndroidViewModel(application){
+    context: Context,
+    repository: RecipeRepository = RecipeRepositorySingleton.getInstance(
+        RecipeDatabase.getDatabase(
+            context
+        )
+    )
+) : ViewModel(){
 
-    // Did we even use this in our labs?
+    private val _workManager = WorkManager.getInstance(context)
+    private val _recipeList = repository.recipes
+    val recipeList: LiveData<List<Meal>>
+        get() = _recipeList
+
     private val _dataFetchStatus = MutableLiveData<DataFetchStatus>()
     val dataFetchStatus: LiveData<DataFetchStatus>
         get() {
@@ -32,7 +45,14 @@ class RecipeDetailViewModel(
         }
 
     init{
-        TODO("How should this viewmodel be initialized?")
+        if (repository.lastRequest == null) {
+            //createWorkManagerTask(RecipeFetchWorker.RequestType.SET_RECIPE_DETAIL)
+        } else {
+            // TODO("fix this")
+            //createWorkManagerTask(repository.lastRequest!!, "")
+        }
+
+        _dataFetchStatus.value = DataFetchStatus.LOADING
     }
 
     private val _mealDetails = MutableLiveData<RecipeLookupResponse>()
@@ -40,6 +60,24 @@ class RecipeDetailViewModel(
         get() {
             return _mealDetails
         }
+
+    private fun createWorkManagerTask(requestString: String, mealID: String) {
+        val inputData = Data.Builder()
+            .putString("requestType", requestString)
+            .putString("mealID", mealID)
+            .build()
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val request = OneTimeWorkRequestBuilder<RecipeFetchWorker>()
+            .setInputData(inputData)
+            .setConstraints(constraints)
+            .build()
+
+        _workManager.enqueue(request)
+    }
 
     private fun setIsFavorite(recipe: Recipes){
         TODO("Fix favorite stuff")
