@@ -1,5 +1,8 @@
 package com.example.foodflix.ui
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -35,6 +38,10 @@ fun DiscoverScreen(
     modifier: Modifier = Modifier,
     recipeViewModel: RecipeListViewModel = viewModel(factory = RecipeListViewModelFactory(LocalContext.current))
 ){
+
+    if (!isNetworkConnected(LocalContext.current)) {
+        NoConnectionDialog()
+    }
     val recipesFromViewModel by recipeViewModel.recipeList.observeAsState(emptyList())
 
     // already done in the init of the ViewModel, but could be useful later
@@ -87,4 +94,51 @@ fun RecipeListItem(meal: Meal, navController: NavController) {
             }
         }
     }
+}
+
+
+// Modified this: https://github.com/Foso/Jetpack-Compose-Playground/blob/master/app/src/main/java/de/jensklingenberg/jetpackcomposeplayground/mysamples/github/material/alertdialog/AlertDialogSample.kt
+@Composable
+fun NoConnectionDialog() {
+    MaterialTheme {
+        Column {
+            val openDialog = remember { mutableStateOf(true)  }
+
+            if (openDialog.value) {
+
+                AlertDialog(
+                    onDismissRequest = {
+                        // Dismiss the dialog when the user clicks outside the dialog or on the back
+                        // button. If you want to disable that functionality, simply use an empty
+                        // onCloseRequest.
+                        openDialog.value = false
+                    },
+                    title = {
+                        Text(text = "No Connection")
+                    },
+                    text = {
+                        Text("Please reconnect to the internet. ")
+                    },
+                    confirmButton = {
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = {
+                                openDialog.value = false
+                            }) {
+                            Text("Ok")
+                        }
+                    }
+                )
+            }
+        }
+
+    }
+}
+
+private fun isNetworkConnected(context: Context): Boolean {
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
