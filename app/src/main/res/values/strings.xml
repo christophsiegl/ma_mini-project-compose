@@ -8,4 +8,14 @@
     <string name="discover">Discover</string>
     <string name="things_at_home">Things at Home</string>
     <string name="meal_picture_description">Picture of finished meal</string>
+
+    //LOGIN:
+    <string name="initial_title">Welcome to the app!</string>
+    <string name="logged_in_title">You’re logged in!</string>
+    <string name="logged_out_title">You’re logged out.</string>
+    <string name="log_in_button">Log In</string>
+    <string name="log_out_button">Log Out</string>
+    <string name="name_label">Name</string>
+    <string name="email_label">Email</string>
+    <string name="user_icon_url">https://images.ctfassets.net/23aumh6u8s0i/5hHkO5DxWMPxDjc2QZLXYf/403128092dedc8eb3395314b1d3545ad/icon-user.png</string>
 </resources>
