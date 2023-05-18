@@ -10,9 +10,7 @@ class RecipeDetailViewModelFactory(
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(RecipeDetailViewModel::class.java)){
-            TODO("Fix the work manager etc")
-
-            //return RecipeDetailViewModel(context) as T
+            return RecipeDetailViewModel(context) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

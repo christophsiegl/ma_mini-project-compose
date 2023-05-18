@@ -45,5 +45,5 @@ interface RecipeDatabaseDao {
     suspend fun isFavourite(id: Long): Boolean
 
     @Query("SELECT * from recipeDetail")
-    fun getAllRecipeDetailsAsLiveData(): LiveData<MealDetail>
+    fun getAllRecipeDetailsAsLiveData(): LiveData<List<MealDetail>>
 }

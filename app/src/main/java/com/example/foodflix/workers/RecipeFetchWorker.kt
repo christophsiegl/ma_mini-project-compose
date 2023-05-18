@@ -21,7 +21,6 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
     override suspend fun doWork(): Result = coroutineScope {
         try {
             val requestType = inputData.getString("requestType")
-            val mealID = inputData.getString("mealID")
 
             // Call the API and get the recipes based on the request type
             when (requestType) {
@@ -29,6 +28,7 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
                     recipeRepository.getCanadianRecipes()
                 }
                 RequestType.GET_RECIPE_DETAIL -> {
+                    val mealID = inputData.getString("mealID")
                     recipeRepository.getRecipeDetails(mealID!!)
                 }
                 else -> throw IllegalArgumentException("Invalid request type")

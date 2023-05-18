@@ -42,6 +42,7 @@ interface RecipeAPIService {
         category: String
     ): RecipesResponse
     @GET("lookup.php?i={meal_id}")
+    //www.themealdb.com/api/json/v1/1/lookup.php?i=52772
     suspend fun getMealById(
         @Path("meal_id")
         meal_id: String

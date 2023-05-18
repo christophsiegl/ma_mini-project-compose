@@ -57,7 +57,7 @@ class RecipeDetailViewModel(
     }
 
     private val _mealDetails = repository.recipeDetail
-    val mealDetails: LiveData<MealDetail>
+    val mealDetails: LiveData<List<MealDetail>>
         get() {
             return _mealDetails
         }
