@@ -40,7 +40,7 @@ fun DiscoverScreen(
 ){
 
     if (!isNetworkConnected(LocalContext.current)) {
-        NoConnectionDialog()
+        //NoConnectionDialog()
     }
     val recipesFromViewModel by recipeViewModel.recipeList.observeAsState(emptyList())
 
@@ -98,6 +98,7 @@ fun RecipeListItem(meal: Meal, navController: NavController) {
 
 
 // Modified this: https://github.com/Foso/Jetpack-Compose-Playground/blob/master/app/src/main/java/de/jensklingenberg/jetpackcomposeplayground/mysamples/github/material/alertdialog/AlertDialogSample.kt
+/*
 @Composable
 fun NoConnectionDialog() {
     MaterialTheme {
@@ -135,7 +136,7 @@ fun NoConnectionDialog() {
 
     }
 }
-
+*/
 private fun isNetworkConnected(context: Context): Boolean {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val network = connectivityManager.activeNetwork ?: return false
