@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "recipes")
 data class Meal(
-    @PrimaryKey()
+    @PrimaryKey
     @Json(name = "idMeal")
     val idMeal: String,
     @ColumnInfo(name = "strMeal")
