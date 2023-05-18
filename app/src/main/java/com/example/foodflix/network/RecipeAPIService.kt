@@ -8,7 +8,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
@@ -38,22 +37,23 @@ interface RecipeAPIService {
     suspend fun getCanadianMeals(
     ): RecipesResponse
 
-    @GET("search.php?f=a")
-    suspend fun getMealByA(
+    @GET("search.php")
+    suspend fun getMealByFirstLetter(
+        @Query("f")
+        firstLetter: Char
     ): RecipeLookupResponse
 
-    @GET("lookup.php?c={category}")
+    @GET("lookup.php")
     suspend fun getMealsByCategory(
-        @Path("category")
+        @Query("c")
         category: String
     ): RecipesResponse
 
-    //www.themealdb.com/api/json/v1/1/lookup.php?i=52772
-    //52804
-    @GET("lookup.php?i={movie_id}")
+    //www.themealdb.com/api/json/v1/1/lookup.php?i=52772  Attention: set i with Query!
+    @GET("lookup.php")
     suspend fun getMealById(
-        @Path("movie_id")
-        movieId: String,
+        @Query("i")
+        id: String,
     ): RecipeLookupResponse
 }
 object RecipeApi{

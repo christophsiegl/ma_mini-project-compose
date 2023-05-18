@@ -19,7 +19,7 @@ data class MealDetail(
     @ColumnInfo(name = "strCategory")
     @Json(name = "strCategory")
     val strCategory: String,
-    //@ColumnInfo(name = "strDrinkAlternate")
+    //@ColumnInfo(name = "strDrinkAlternate") //Attention: Null in every response!!!
     //@Json(name = "strDrinkAlternate")
     //val strDrinkAlternate: String ,
     @ColumnInfo(name = "strArea")
@@ -58,4 +58,28 @@ data class MealDetail(
     @ColumnInfo(name = "strIngredient8")
     @Json(name = "strIngredient8")
     val strIngredient8: String,
+    @ColumnInfo(name = "strMeasure1")
+    @Json(name = "strMeasure1")
+    val strMeasure1: String,
+    @ColumnInfo(name = "strMeasure2")
+    @Json(name = "strMeasure2")
+    val strMeasure2: String,
+    @ColumnInfo(name = "strMeasure3")
+    @Json(name = "strMeasure3")
+    val strMeasure3: String,
+    @ColumnInfo(name = "strMeasure4")
+    @Json(name = "strMeasure4")
+    val strMeasure4: String,
+    @ColumnInfo(name = "strMeasure5")
+    @Json(name = "strMeasure5")
+    val strMeasure5: String,
+    @ColumnInfo(name = "strMeasure6")
+    @Json(name = "strMeasure6")
+    val strMeasure6: String,
+    @ColumnInfo(name = "strMeasure7")
+    @Json(name = "strMeasure7")
+    val strMeasure7: String,
+    @ColumnInfo(name = "strMeasure8")
+    @Json(name = "strMeasure8")
+    val strMeasure8: String,
 ) : Parcelable

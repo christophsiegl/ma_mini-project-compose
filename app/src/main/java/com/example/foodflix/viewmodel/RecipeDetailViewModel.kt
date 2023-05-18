@@ -57,7 +57,7 @@ class RecipeDetailViewModel(
         get() {
             return _mealDetails
         }
-    fun createWorkManagerTaskDetail(requestString: String, mealID: String) {
+    fun createWorkManagerTaskMealDetail(requestString: String, mealID: String) {
         val inputData = Data.Builder()
             .putString("requestType", requestString)
             .putString("mealID", mealID)

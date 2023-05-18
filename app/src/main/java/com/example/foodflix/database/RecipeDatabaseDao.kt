@@ -16,15 +16,8 @@ interface RecipeDatabaseDao {
     @Insert(entity = MealDetail::class)
     suspend fun insert(mealDetail: MealDetail)
 
-    // Maybe we need this later, im not sure.
-    //@Query("UPDATE recipes SET mealDetail =  :mealDetail WHERE idMeal = :id")
-    //suspend fun insertDetails(mealDetail: MealDetail, id: Long)
-
     @Insert(entity = Meal::class)
     suspend fun insertAll(meal: List<Meal>)
-
-    @Insert(entity = MealDetail::class)
-    suspend fun insertAllMealDetails(meal: List<MealDetail>)
 
     @Delete(entity = Meal::class)
     suspend fun delete(meal: Meal)
@@ -49,4 +42,8 @@ interface RecipeDatabaseDao {
 
     @Query("SELECT * from recipeDetail")
     fun getAllRecipeDetailsAsLiveData(): LiveData<List<MealDetail>>
+
+    // Maybe we need this later, im not sure.
+    //@Query("UPDATE recipes SET mealDetail =  :mealDetail WHERE idMeal = :id")
+    //suspend fun insertDetails(mealDetail: MealDetail, id: Long)
 }
