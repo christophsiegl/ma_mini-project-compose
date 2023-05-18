@@ -11,21 +11,36 @@ import com.auth0.android.callback.Callback
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.result.Credentials
 import android.util.Log
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
 import com.example.foodflix.R
 import com.example.foodflix.User
+import com.example.foodflix.database.RecipeDatabase
+import com.example.foodflix.repository.RecipeRepository
+import com.example.foodflix.repository.RecipeRepositorySingleton
+import com.example.foodflix.workers.RecipeFetchWorker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 
 // 1
-class LoginScreenViewModel() : ViewModel() {
+class LoginScreenViewModel(
 
+
+) : ViewModel() {
 
     private val TAG = "MainViewModel"  // 1
     private lateinit var account: Auth0  // 2
     private lateinit var context: Context  // 3
 
     private var credentialsManager: CredentialsManager? = null
+
 
 
     var user by mutableStateOf(User())
@@ -55,6 +70,8 @@ class LoginScreenViewModel() : ViewModel() {
                     userIsAuthenticated = true
                     appJustLaunched = false
                     credentialsManager?.saveCredentials(result)
+
+                    createWorkManagerTask("InsertUser",result.user.email!!)
 
 
 
@@ -102,6 +119,26 @@ class LoginScreenViewModel() : ViewModel() {
         if(userIsAuthenticated){
             user = User(credentialsManager!!.awaitCredentials().idToken)
         }
+    }
+
+
+    fun createWorkManagerTask(requestString: String,email:String) {
+        val _workManager = WorkManager.getInstance(context)
+        val inputData = Data.Builder()
+            .putString("requestType", requestString)
+            .putString("email", email)
+            .build()
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val request = OneTimeWorkRequestBuilder<RecipeFetchWorker>()
+            .setInputData(inputData)
+            .setConstraints(constraints)
+            .build()
+
+        _workManager.enqueue(request)
     }
 
 }

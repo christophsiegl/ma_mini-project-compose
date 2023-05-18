@@ -22,6 +22,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.foodflix.FoodflixScreen
 import com.example.foodflix.viewmodel.LoginScreenViewModel
 import com.example.foodflix.viewmodel.LoginScreenViewModelFactory
 import kotlinx.coroutines.launch
@@ -29,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    onToHomeScreenButtonClicked: () -> Unit = {},
+    navController: NavController,
     modifier: Modifier = Modifier,
     loginScreenViewModel: LoginScreenViewModel = viewModel(factory = LoginScreenViewModelFactory())
 ){
@@ -77,6 +79,11 @@ fun LoginScreen(
                 url = loginScreenViewModel.user.picture,
                 description = loginScreenViewModel.user.name,
             )
+            LogButton(
+                text = "Go to settings",
+                onClick = { navController.navigate("${FoodflixScreen.Profile.name}/${loginScreenViewModel.user.email}") },
+            )
+
 
         }
 

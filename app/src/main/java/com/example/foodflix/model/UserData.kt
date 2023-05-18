@@ -11,10 +11,10 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "UserData")
 data class UserData(
     @PrimaryKey()
-    val email: String,
+    var email: String,
 
-    @ColumnInfo(name = "Age")
-    val age: Int,
+    @ColumnInfo(name = "age")
+    var age: Int,
 
     //@ColumnInfo(name = "FavoriteCategory")
     //val favoriteCategory: String

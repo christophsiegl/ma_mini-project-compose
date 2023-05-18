@@ -20,6 +20,12 @@ interface RecipeDatabaseDao {
     @Insert(entity = UserData::class)
     suspend fun insert(userData: UserData)
 
+    @Query("UPDATE UserData SET age =  :age WHERE email = :email")
+    suspend fun update(email:String,age:Int)
+
+    @Query("SELECT EXISTS(SELECT age from UserData WHERE email = :email)")
+    suspend fun getAge(email:String) : Int
+
     // Maybe we need this later, im not sure.
     //@Query("UPDATE recipes SET mealDetail =  :mealDetail WHERE idMeal = :id")
     //suspend fun insertDetails(mealDetail: MealDetail, id: Long)
@@ -45,8 +51,7 @@ interface RecipeDatabaseDao {
     @Query("SELECT * FROM recipeDetail")
     fun getMealDetail(): LiveData<MealDetail>
 
-    @Query("SELECT age FROM UserData WHERE email = :email")
-    suspend fun getAge(email: String): Int
+
 
     @Query("SELECT EXISTS(SELECT * from recipes WHERE idMeal = :id)")
     suspend fun isFavourite(id: Long): Boolean

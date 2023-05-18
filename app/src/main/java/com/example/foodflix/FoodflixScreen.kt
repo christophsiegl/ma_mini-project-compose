@@ -37,6 +37,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.example.foodflix.ui.ProfileScreen
 import kotlinx.coroutines.CoroutineScope
 import com.example.foodflix.ui.DiscoverScreen
@@ -222,16 +224,17 @@ fun FoodflixApp(modifier: Modifier = Modifier){
             }
             composable(route = FoodflixScreen.Login.name) {
                 LoginScreen(
-                    onToHomeScreenButtonClicked = {
-                        navController.navigate(FoodflixScreen.Home.name)
-                    }
+                    navController
                 )
             }
             composable(route = FoodflixScreen.Discover.name) {
                 DiscoverScreen()
             }
-            composable(route = FoodflixScreen.Profile.name) {
-                ProfileScreen()
+            composable(
+                route = "${FoodflixScreen.Profile.name}/{email}",
+                arguments = listOf(navArgument("email") { type = NavType.StringType })
+            ){
+                ProfileScreen(navController = navController)
             }
         }
     }
