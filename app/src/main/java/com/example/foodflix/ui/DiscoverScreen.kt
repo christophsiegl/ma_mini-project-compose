@@ -21,10 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavArgument
 import androidx.navigation.NavController
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.foodflix.FoodflixScreen
 import com.example.foodflix.R
@@ -40,7 +37,7 @@ fun DiscoverScreen(
 ){
 
     if (!isNetworkConnected(LocalContext.current)) {
-        //NoConnectionDialog()
+        NoConnectionDialog()
     }
     val recipesFromViewModel by recipeViewModel.recipeList.observeAsState(emptyList())
 
@@ -78,7 +75,7 @@ fun RecipeListItem(meal: Meal, navController: NavController) {
             modifier = Modifier
                 .padding(4.dp)
                 .fillMaxWidth()
-                .clickable() {
+                .clickable {
                     navController.navigate("${FoodflixScreen.RecipeDetail.name}/${meal.idMeal}")
                 },
             elevation = 0.dp
@@ -96,9 +93,7 @@ fun RecipeListItem(meal: Meal, navController: NavController) {
     }
 }
 
-
 // Modified this: https://github.com/Foso/Jetpack-Compose-Playground/blob/master/app/src/main/java/de/jensklingenberg/jetpackcomposeplayground/mysamples/github/material/alertdialog/AlertDialogSample.kt
-/*
 @Composable
 fun NoConnectionDialog() {
     MaterialTheme {
@@ -136,7 +131,7 @@ fun NoConnectionDialog() {
 
     }
 }
-*/
+
 private fun isNetworkConnected(context: Context): Boolean {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val network = connectivityManager.activeNetwork ?: return false
