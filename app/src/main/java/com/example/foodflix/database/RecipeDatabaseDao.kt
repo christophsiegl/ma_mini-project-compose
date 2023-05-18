@@ -23,6 +23,9 @@ interface RecipeDatabaseDao {
     @Insert(entity = Meal::class)
     suspend fun insertAll(meal: List<Meal>)
 
+    @Insert(entity = MealDetail::class)
+    suspend fun insertAllMealDetails(meal: List<MealDetail>)
+
     @Delete(entity = Meal::class)
     suspend fun delete(meal: Meal)
 

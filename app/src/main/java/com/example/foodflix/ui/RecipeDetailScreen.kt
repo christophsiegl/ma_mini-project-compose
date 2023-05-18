@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -14,11 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.foodflix.model.MealDetail
 import com.example.foodflix.viewmodel.RecipeDetailViewModel
 import com.example.foodflix.viewmodel.RecipeDetailViewModelFactory
 import com.example.foodflix.workers.RecipeFetchWorker
-import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun RecipeDetailScreen(
@@ -31,7 +30,10 @@ fun RecipeDetailScreen(
     val recipeDetailFromViewModel by recipeDetailViewModel.mealDetails.observeAsState(emptyList())
 
     val selectedMealId = navController.currentBackStackEntry?.arguments?.getString("mealId")
-    recipeDetailViewModel.createWorkManagerTask(RecipeFetchWorker.RequestType.GET_RECIPE_DETAIL ,selectedMealId!!)
+
+    LaunchedEffect(Unit){
+        recipeDetailViewModel.createWorkManagerTaskDetail(RecipeFetchWorker.RequestType.GET_RECIPE_DETAIL ,selectedMealId!!)
+    }
 
     Column() {
         Text(text = "Recipe Detail Screen")
@@ -40,7 +42,7 @@ fun RecipeDetailScreen(
         Spacer(modifier = Modifier.height(8.dp))
         if(recipeDetailFromViewModel.isNotEmpty())
         {
-            Text(text = recipeDetailFromViewModel[0].strCategory)
+            Text(text = recipeDetailFromViewModel[0].strMeal)
         }
 
         /*

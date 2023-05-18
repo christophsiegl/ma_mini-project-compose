@@ -5,7 +5,7 @@ import androidx.room.*
 import com.example.foodflix.model.Meal
 import com.example.foodflix.model.MealDetail
 
-@Database(entities = [Meal::class, MealDetail::class], version = 2, exportSchema = false)
+@Database(entities = [Meal::class, MealDetail::class], version = 9, exportSchema = false)
 abstract class RecipeDatabase : RoomDatabase() {
     abstract fun recipeDatabaseDao(): RecipeDatabaseDao
 

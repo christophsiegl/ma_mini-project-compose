@@ -1,19 +1,15 @@
 package com.example.foodflix.viewmodel
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.work.*
 import com.example.foodflix.database.RecipeDatabase
-import com.example.foodflix.database.RecipeDatabaseDao
 import com.example.foodflix.database.Recipes
 import com.example.foodflix.model.Meal
 import com.example.foodflix.model.MealDetail
 import com.example.foodflix.network.DataFetchStatus
-import com.example.foodflix.network.RecipeLookupResponse
 import com.example.foodflix.repository.RecipeRepository
 import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.workers.RecipeFetchWorker
@@ -61,7 +57,7 @@ class RecipeDetailViewModel(
         get() {
             return _mealDetails
         }
-    fun createWorkManagerTask(requestString: String, mealID: String) {
+    fun createWorkManagerTaskDetail(requestString: String, mealID: String) {
         val inputData = Data.Builder()
             .putString("requestType", requestString)
             .putString("mealID", mealID)

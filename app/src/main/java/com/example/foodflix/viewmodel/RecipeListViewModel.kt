@@ -45,7 +45,7 @@ class RecipeListViewModel(
         if (repository.lastRequest == null) {
             createWorkManagerTask(RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES)
         } else {
-            createWorkManagerTask(repository.lastRequest!!)
+            //createWorkManagerTask(repository.lastRequest!!)
         }
 
         _dataFetchStatus.value = DataFetchStatus.LOADING

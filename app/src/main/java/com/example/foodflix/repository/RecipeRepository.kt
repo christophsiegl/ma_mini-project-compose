@@ -22,7 +22,10 @@ class RecipeRepository(private val database: RecipeDatabase) {
         withContext(Dispatchers.IO) {
             database.recipeDatabaseDao().deleteAllRecipes() //delete after the meals are fetched!
             val popularMeals = RecipeApi.recipeListRetrofitService.getCanadianMeals()
+            //val mealDetail = RecipeApi.recipeListRetrofitService.getMealById()
+            //val mealDetail = RecipeApi.recipeListRetrofitService.getMealByA()
             database.recipeDatabaseDao().insertAll(popularMeals.meals)
+            //database.recipeDatabaseDao().insertAllMealDetails(mealDetail.meals)
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
@@ -30,8 +33,9 @@ class RecipeRepository(private val database: RecipeDatabase) {
     suspend fun getRecipeDetails(id: String) {
         withContext(Dispatchers.IO) {
             database.recipeDatabaseDao().deleteAllRecipeDetails()
-            val mealDetail = RecipeApi.recipeListRetrofitService.getMealById(id)
-            database.recipeDatabaseDao().insert(mealDetail.detailmeal[0])
+            val mealDetail = RecipeApi.recipeListRetrofitService.getMealById("52772")
+            //val mealDetail = RecipeApi.recipeListRetrofitService.getMealByA()
+            database.recipeDatabaseDao().insert(mealDetail.meals[0])
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_RECIPE_DETAIL
     }

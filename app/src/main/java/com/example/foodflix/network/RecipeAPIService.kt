@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 private val moshi = Moshi.Builder()
@@ -36,19 +37,24 @@ interface RecipeAPIService {
     @GET("filter.php?a=Canadian")
     suspend fun getCanadianMeals(
     ): RecipesResponse
+
+    @GET("search.php?f=a")
+    suspend fun getMealByA(
+    ): RecipeLookupResponse
+
     @GET("lookup.php?c={category}")
     suspend fun getMealsByCategory(
         @Path("category")
         category: String
     ): RecipesResponse
-    @GET("lookup.php?i={meal_id}")
+
     //www.themealdb.com/api/json/v1/1/lookup.php?i=52772
+    //52804
+    @GET("lookup.php?i={movie_id}")
     suspend fun getMealById(
-        @Path("meal_id")
-        meal_id: String
+        @Path("movie_id")
+        movieId: String,
     ): RecipeLookupResponse
-
-
 }
 object RecipeApi{
     val recipeListRetrofitService : RecipeAPIService by lazy {
