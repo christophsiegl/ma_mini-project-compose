@@ -13,12 +13,13 @@ private val DarkColorPalette = darkColors(
     primaryVariant = OffBlackBlueHint,
     secondary = OffBlackBlueHintLighter,
 
+    secondaryVariant = OffBlackBlueHintLighter,
     background = OffBlackBlueHint,
-    surface = androidx.compose.ui.graphics.Color.White,
+    surface = OffBlackBlueHint,
     onPrimary = androidx.compose.ui.graphics.Color.White,
-    onSecondary = OffBlackBlueHintLighter,
+    onSecondary = androidx.compose.ui.graphics.Color.White,
     onBackground = androidx.compose.ui.graphics.Color.White,
-    onSurface = OffBlackBlueHintLighter
+    onSurface = androidx.compose.ui.graphics.Color.White
 )
 
 private val LightColorPalette = lightColors(
