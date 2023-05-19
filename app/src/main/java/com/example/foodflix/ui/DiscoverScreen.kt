@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
@@ -30,13 +32,20 @@ import com.example.foodflix.R
 import com.example.foodflix.model.Meal
 import com.example.foodflix.viewmodel.RecipeListViewModel
 import com.example.foodflix.viewmodel.RecipeListViewModelFactory
+import com.example.foodflix.viewmodel.SharedViewModel
 
 @Composable
 fun DiscoverScreen(
     modifier: Modifier = Modifier,
-    recipeViewModel: RecipeListViewModel = viewModel(factory = RecipeListViewModelFactory(LocalContext.current))
+    recipeViewModel: RecipeListViewModel = viewModel(factory = RecipeListViewModelFactory(LocalContext.current)),
+    sharedViewModel: SharedViewModel = viewModel()
 ){
     val recipesFromViewModel by recipeViewModel.recipeList.observeAsState(emptyList())
+    val canSearch by sharedViewModel.canSearch.collectAsState()
+
+    LaunchedEffect(Unit) {
+        sharedViewModel.setCanSearch(true) // Set canSearch to true
+    }
 
     // already done in the init of the ViewModel, but could be useful later
     //LaunchedEffect(Unit) {

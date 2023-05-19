@@ -1,5 +1,6 @@
 package com.example.foodflix.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.foodflix.model.UserData
 import com.example.foodflix.viewmodel.LoginScreenViewModel
 import com.example.foodflix.viewmodel.LoginScreenViewModelFactory
 import com.example.foodflix.viewmodel.ProfileScreenViewModel
@@ -32,30 +34,46 @@ fun ProfileScreen(
 
     val corutineScope = rememberCoroutineScope()
 
+    var ageToPrint by remember { mutableStateOf("") }
+    var ageList by remember { mutableStateOf(emptyList<UserData>()) }
+    LaunchedEffect(key1 = email){
+        corutineScope.launch {
+            val ageFromDatabase = profileScreenViewModel.getAllUsers()
+            ageList = ageFromDatabase
+            Log.d("AgeList", "All ages from database: $ageList")
 
-    var age = LaunchedEffect(Unit){
-        corutineScope.launch { profileScreenViewModel.readAgeFromDatabase(email!!).toString() }
-    }.toString()
+            // Iterate through the ageList
+            for (age in ageList) {
 
+                if(age.email == email){
+                    ageToPrint = age.age.toString()
+                }
+                // Perform operations on each age
+                // Example: Log each age value
+                Log.d("EMAIL", "Age value: ${age.email}")
+                Log.d("Age", "Age value: ${age.age}")
+            }
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextField(
-            value = age,
+            value = ageToPrint,
             onValueChange = { newText ->
-                age = newText
+                ageToPrint = newText
             }
         )
 
         Button(
             onClick = {
-                corutineScope.launch{callFunction(email!!, age.toInt(), profileScreenViewModel) }
+                corutineScope.launch{callFunction(email!!, ageToPrint.toInt(), profileScreenViewModel) }
                       },
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text(text = "Call Function NOW")
+            Text(text = "Save")
         }
     }
 }

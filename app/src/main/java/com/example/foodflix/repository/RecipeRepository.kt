@@ -47,6 +47,10 @@ class RecipeRepository(private val database: RecipeDatabase) {
     suspend fun getAgeFromUser(email: String): Int {
         return database.recipeDatabaseDao().getAge(email)
     }
+
+    suspend fun getAllUsers(): List<UserData> {
+        return database.recipeDatabaseDao().getAllUsers()
+    }
 }
 
 object RecipeRepositorySingleton {

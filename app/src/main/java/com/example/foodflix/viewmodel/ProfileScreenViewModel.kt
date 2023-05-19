@@ -1,6 +1,7 @@
 package com.example.foodflix.viewmodel
 
 import android.content.Context
+import android.service.autofill.UserData
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,6 +24,9 @@ class ProfileScreenViewModel(
         return _recipeList.getAgeFromUser(email)
     }
 
+    suspend fun getAllUsers(): List<com.example.foodflix.model.UserData> {
+        return _recipeList.getAllUsers()
+    }
     suspend fun updateAgeInDatabase(age: Int, email: String) {
         _recipeList.updateUserAge(email,age)
     }

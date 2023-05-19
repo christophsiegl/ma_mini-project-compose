@@ -45,6 +45,9 @@ interface RecipeDatabaseDao {
     @Query("SELECT * from recipes ORDER BY idMeal ASC")
     suspend fun getAllRecipes(): List<Meal>
 
+    @Query("SELECT * from UserData ORDER BY email ASC")
+    suspend fun getAllUsers(): List<UserData>
+
     @Query("SELECT * from recipes ORDER BY idMeal ASC")
     fun getAllRecipesAsLiveData(): LiveData<List<Meal>>
 
