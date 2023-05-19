@@ -37,6 +37,9 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.foodflix.R
 import com.example.foodflix.model.MealDetail
+import com.example.foodflix.ui.theme.OffBlackBlueHint
+import com.example.foodflix.ui.theme.OffBlackBlueHintDarker
+import com.example.foodflix.ui.theme.OffBlackBlueHintLighter
 import com.example.foodflix.viewmodel.RecipeDetailViewModel
 import com.example.foodflix.viewmodel.RecipeDetailViewModelFactory
 import com.example.foodflix.workers.RecipeFetchWorker
@@ -72,7 +75,7 @@ fun RecipeDetailScreen(
         motionLayoutState = motionState,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.LightGray)
+            .background(OffBlackBlueHintDarker)
     ) {
         if (recipeDetail.isNotEmpty()) {
             Image(
@@ -80,13 +83,13 @@ fun RecipeDetailScreen(
                 contentDescription = stringResource(R.string.meal_picture_description),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                .layoutId("headerImage")
+                .layoutId("headerImage").background(OffBlackBlueHintDarker)
             )
 
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .background(Color.White, shape = RoundedCornerShape(topStart = corners, topEnd = corners))
+                    .background(color = OffBlackBlueHintLighter, shape = RoundedCornerShape(topStart = corners, topEnd = corners))
                     .layoutId("contentBg")
             )
 
@@ -109,7 +112,7 @@ fun RecipeDetailScreen(
             Text(
                 text = "Category: ${recipeDetail[0].strCategory}", fontSize = 16.sp,
                 textAlign = TextAlign.Center,
-                color = Color.Gray, fontStyle = FontStyle.Italic,
+                fontStyle = FontStyle.Italic,
                 modifier = Modifier
                     .layoutId("subTitle")
                     .fillMaxWidth()
@@ -130,7 +133,6 @@ fun RecipeDetailScreen(
                     .padding(6.dp),
                 text = "Popular Area: ${recipeDetail[0].strArea}", fontSize = 16.sp,
                 textAlign = TextAlign.Center,
-                color = Color.Gray
             )
 
             val properties = motionProperties("actions")
@@ -138,45 +140,49 @@ fun RecipeDetailScreen(
             Row(
                 modifier = Modifier
                     .layoutId("actions")
-                    .background(properties.value.color("background")),
+                    .background(color = OffBlackBlueHint),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 IconButton(onClick = { }) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Default.Share, contentDescription = "", tint = Color.White)
-                        Text(text = "SHARE", color = Color.White, fontSize = 12.sp)
+                        Text(text = "SHARE", fontSize = 12.sp)
                     }
                 }
 
                 IconButton(onClick = { }) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Outlined.ThumbUp, contentDescription = "", tint = Color.White)
-                        Text(text = "LIKE", color = Color.White, fontSize = 12.sp)
+                        Text(text = "LIKE", fontSize = 12.sp)
                     }
                 }
 
                 IconButton(onClick = { }) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Outlined.Star, contentDescription = "", tint = Color.White)
-                        Text(text = "SAVE", color = Color.White, fontSize = 12.sp)
+                        Text(text = "SAVE", fontSize = 12.sp)
                     }
                 }
             }
 
-
-
-            Text(
-                text = "Instructions: \n" + recipeDetail[0].strInstructions,
-                modifier = Modifier.fillMaxHeight()
+            Column(
+                modifier = Modifier
                     .layoutId("text")
-                    .padding(horizontal = 18.dp),
-                fontSize = 16.sp,
-            )
+                    .background(OffBlackBlueHintLighter)
+                    .verticalScroll(rememberScrollState())
+            ){
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp),
+                    text = "Instructions: \n" + recipeDetail[0].strInstructions,
+                    fontSize = 20.sp,
+                )
 
-            //Spacer(modifier = Modifier.height(8.dp))
-            //IngredientsTable(mealDetail = recipeDetail[0])
-            //Spacer(modifier = Modifier.height(8.dp))
+                //Spacer(modifier = Modifier.height(8.dp))
+                IngredientsTable(mealDetail = recipeDetail[0])
+                //Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }
@@ -190,7 +196,7 @@ fun RowScope.TableCell(
     Text(
         text = text,
         Modifier
-            .border(1.dp, Color.Black)
+            .border(1.dp, Color.White)
             .weight(weight)
             .padding(8.dp)
     )
@@ -203,9 +209,9 @@ fun IngredientsTable(mealDetail: MealDetail){
     val column1Weight = .7f // 30%
     val column2Weight = .3f // 70%
     // The LazyColumn will be our table. Notice the use of the weights below
-    Column(Modifier.fillMaxSize().layoutId("table").padding(12.dp)) {
+    Column(Modifier.fillMaxSize().background(OffBlackBlueHintLighter).layoutId("table").padding(12.dp)) {
         // Here is the header
-        Row(Modifier.background(Color.Gray)) {
+        Row(Modifier.background(OffBlackBlueHint)) {
             TableCell(text = "Ingredient", weight = column1Weight)
             TableCell(text = "Amount", weight = column2Weight)
         }

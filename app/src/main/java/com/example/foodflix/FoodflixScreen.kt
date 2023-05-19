@@ -1,6 +1,7 @@
 package com.example.foodflix
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -29,7 +30,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.foodflix.database.RecipeDatabase
 import com.example.foodflix.repository.RecipeRepositorySingleton
-import com.example.foodflix.ui.theme.Purple500
 import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Density
@@ -38,6 +38,10 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.foodflix.ui.*
+import com.example.foodflix.ui.theme.OffBlackBlueHint
+import com.example.foodflix.ui.theme.OffBlackBlueHintDarker
+import com.example.foodflix.ui.theme.OffBlackBlueHintLighter
+import com.example.foodflix.ui.theme.Pink
 import kotlinx.coroutines.CoroutineScope
 
 enum class FoodflixScreen {
@@ -59,7 +63,6 @@ fun FoodflixAppBar(
 ) {
     TopAppBar(
         title = { Text(stringResource(id = R.string.app_name)) },
-        modifier = modifier,
         navigationIcon = {
             IconButton(onClick = { coroutineScope.launch { scaffoldState.drawerState.open() } }) {
                 Icon(
@@ -171,7 +174,7 @@ fun FoodflixApp(modifier: Modifier = Modifier){
                                 }
                                 navController.navigate(item.route)
                             },
-                        backgroundColor = if (selected) Purple500 else Color.LightGray,
+                        backgroundColor = if (selected) Pink else OffBlackBlueHintLighter,
                         elevation = 0.dp,
                         shape = RoundedCornerShape(12.dp)
                     ) {
