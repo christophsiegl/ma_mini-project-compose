@@ -28,6 +28,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.foodflix.FoodflixScreen
 import com.example.foodflix.R
 import com.example.foodflix.model.Meal
+import com.example.foodflix.ui.theme.OffBlackBlueHint
+import com.example.foodflix.ui.theme.OffBlackBlueHintDarker
 import com.example.foodflix.viewmodel.RecipeListViewModel
 import com.example.foodflix.viewmodel.RecipeListViewModelFactory
 import com.example.foodflix.viewmodel.SharedViewModel
@@ -67,9 +69,9 @@ fun BrowseContent(recipes: List<Meal>, navController: NavController) {
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 180.dp),
         contentPadding = PaddingValues(
             start = 2.dp,
-            top = 2.dp,
             end = 2.dp,
-            bottom = 2.dp
+            top = 6.dp,
+            bottom = 6.dp
         ),
         content = {
             items(recipes.size) {
@@ -82,23 +84,24 @@ fun BrowseContent(recipes: List<Meal>, navController: NavController) {
 fun RecipeListItem(meal: Meal, navController: NavController) {
     Row {
         Card(
-            backgroundColor = Color.Gray,
+            backgroundColor = OffBlackBlueHintDarker,
             modifier = Modifier
-                .padding(4.dp)
+                .padding(top = 10.dp, bottom = 10.dp, start=8.dp, end=8.dp)
                 .fillMaxWidth()
                 .clickable {
                     navController.navigate("${FoodflixScreen.RecipeDetail.name}/${meal.idMeal}")
                 },
             elevation = 0.dp
         ) {
-            Column {
+            Column(
+            ) {
                 Image(
                     painter = rememberAsyncImagePainter(meal.strMealThumb),
                     contentDescription = stringResource(R.string.meal_picture_description),
-                    modifier = Modifier.size(226.dp)
+                    modifier = Modifier.size(188.dp)
                 )
-                Text(text = meal.strMeal, style = MaterialTheme.typography.h6, fontSize = 18.sp)
-                Text(text = "VIEW DETAIL", style = MaterialTheme.typography.caption)
+                Text( text = meal.strMeal, style = MaterialTheme.typography.h6, fontSize = 22.sp,
+                    modifier = Modifier.height(55.dp))
             }
         }
     }

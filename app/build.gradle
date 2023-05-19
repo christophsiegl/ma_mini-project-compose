@@ -80,11 +80,14 @@ dependencies {
     implementation "androidx.compose.runtime:runtime:1.4.3"
     //implementation "androidx.compose.runtime:runtime-rxjava2:1.4.3"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha03"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.0-beta02"
 
     //Debug+Test (Compose)
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
+
 
     //Test
     testImplementation 'junit:junit:4.13.2'
@@ -124,4 +127,5 @@ dependencies {
 
     //grids and lists
     implementation "androidx.compose.foundation:foundation:1.4.3"
+
 }
