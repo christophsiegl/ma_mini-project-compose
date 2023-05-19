@@ -54,8 +54,6 @@ interface RecipeDatabaseDao {
     @Query("SELECT * FROM recipeDetail")
     fun getMealDetail(): LiveData<MealDetail>
 
-
-
     @Query("SELECT EXISTS(SELECT * from recipes WHERE idMeal = :id)")
     suspend fun isFavourite(id: Long): Boolean
 

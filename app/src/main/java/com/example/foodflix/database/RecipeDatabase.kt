@@ -1,6 +1,5 @@
 package com.example.foodflix.database
 
-
 import android.content.Context
 import androidx.room.*
 import com.example.foodflix.model.Meal

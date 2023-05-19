@@ -1,29 +1,28 @@
 package com.example.foodflix.viewmodel
 
 import android.content.Context
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.work.*
 import com.example.foodflix.database.RecipeDatabase
+import com.example.foodflix.database.Recipes
 import com.example.foodflix.model.Meal
+import com.example.foodflix.model.MealDetail
 import com.example.foodflix.network.DataFetchStatus
 import com.example.foodflix.repository.RecipeRepository
 import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.workers.RecipeFetchWorker
 
-class RecipeListViewModel(
+class RecipeDetailViewModel(
     context: Context,
     repository: RecipeRepository = RecipeRepositorySingleton.getInstance(
         RecipeDatabase.getDatabase(
             context
         )
     )
-) : ViewModel() {
+) : ViewModel(){
+
     private val _workManager = WorkManager.getInstance(context)
     private val _recipeList = repository.recipes
     val recipeList: LiveData<List<Meal>>
@@ -35,32 +34,33 @@ class RecipeListViewModel(
             return _dataFetchStatus
         }
 
-    private val _navigateToMovieDetail = MutableLiveData<Meal?>()
-    val navigateToMovieDetail: MutableLiveData<Meal?>
+    // This still needs to be implented in a good way.
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean>
         get() {
-            return _navigateToMovieDetail
+            return _isFavorite
         }
 
-    init {
+    init{
         if (repository.lastRequest == null) {
-            createWorkManagerTask(RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES)
+            //createWorkManagerTask(RecipeFetchWorker.RequestType.SET_RECIPE_DETAIL)
         } else {
-            //createWorkManagerTask(repository.lastRequest!!)
+            // TODO("fix this")
+            //createWorkManagerTask(repository.lastRequest!!, "")
         }
 
         _dataFetchStatus.value = DataFetchStatus.LOADING
     }
-    /*
-        fun onMovieListItemClicked(movie: Meal){
-            _navigateToMovieDetail.value = movie
+
+    private val _mealDetails = repository.recipeDetail
+    val mealDetails: LiveData<List<MealDetail>>
+        get() {
+            return _mealDetails
         }
-        fun onMovieDetailNavigated(){
-            _navigateToMovieDetail.value = null
-        }
-    */
-    fun createWorkManagerTask(requestString: String) {
+    fun createWorkManagerTaskMealDetail(requestString: String, mealID: String) {
         val inputData = Data.Builder()
             .putString("requestType", requestString)
+            .putString("mealID", mealID)
             .build()
 
         val constraints = Constraints.Builder()
@@ -74,4 +74,17 @@ class RecipeListViewModel(
 
         _workManager.enqueue(request)
     }
+
+    private fun setIsFavorite(recipe: Recipes){
+        TODO("Fix favorite stuff")
+    }
+
+    fun onSaveMovieButtonClicked(recipe: Recipes){
+        TODO("Fix the save button")
+    }
+
+    fun onRemoveMovieButtonClicked(recipe: Recipes){
+        TODO("Fix the remove from favorites button")
+    }
+
 }

@@ -35,14 +35,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.foodflix.database.RecipeDatabase
 import com.example.foodflix.repository.RecipeRepositorySingleton
-import com.example.foodflix.ui.HomeScreen
-import com.example.foodflix.ui.LoginScreen
 import com.example.foodflix.ui.theme.Purple500
 import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.example.foodflix.ui.*
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.foodflix.ui.ProfileScreen
@@ -264,7 +265,7 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                     sharedViewModel.setCanSearch(true) // Set canSearch to true only on Discover screen
                     sharedViewModel.setSearchFieldVisible(false)
                 }
-                DiscoverScreen()
+                DiscoverScreen(navController = navController)
             }
             composable(
 
@@ -276,6 +277,12 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                     sharedViewModel.setSearchFieldVisible(false)
                 }
                 ProfileScreen(navController = navController)
+            }
+            composable(
+                route = "${FoodflixScreen.RecipeDetail.name}/{mealId}",
+                arguments = listOf(navArgument("mealId") { type = NavType.StringType })
+            ){
+                RecipeDetailScreen(navController = navController)
             }
         }
     }

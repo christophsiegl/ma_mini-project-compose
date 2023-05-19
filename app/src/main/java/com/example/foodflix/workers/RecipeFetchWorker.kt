@@ -14,6 +14,7 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
         const val GET_CANADIAN_RECIPES = "getCanadianRecipes"
         const val GET_TOP_RATED_RECIPES = "getTopRatedRecipes"
         const val INSERT_USER = "InsertUser"
+        const val GET_RECIPE_DETAIL = "setRecipeDetail"
     }
 
     private val recipeRepository = RecipeRepositorySingleton.getInstance(RecipeDatabase.getDatabase(appContext))
@@ -28,13 +29,11 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
                 RequestType.GET_CANADIAN_RECIPES -> {
                     recipeRepository.getCanadianRecipes()
                 }
-
-                RequestType.INSERT_USER -> {
-                    recipeRepository.insertUser(email!!)
+                RequestType.GET_RECIPE_DETAIL -> {
+                    val mealID = inputData.getString("mealID")
+                    recipeRepository.getRecipeDetails(mealID!!)
                 }
                 else -> throw IllegalArgumentException("Invalid request type")
-
-
             }
             Result.success()
 
