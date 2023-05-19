@@ -9,6 +9,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.foodflix.workers.RecipeFetchWorker
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class SharedViewModel(
@@ -24,6 +25,12 @@ class SharedViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
+    private val _userImageUrl = MutableStateFlow<String?>(null)
+    val userImageUrl: StateFlow<String?> = _userImageUrl.asStateFlow()
+
+    fun setUserImageUrl(imageUrl: String?) {
+        _userImageUrl.value = imageUrl
+    }
 
     fun setSearchQuery(query: String) {
         _searchQuery.value = query

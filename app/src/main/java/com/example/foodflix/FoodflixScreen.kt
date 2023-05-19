@@ -58,6 +58,7 @@ import com.example.foodflix.ui.theme.OffBlackBlueHintDarker
 import com.example.foodflix.ui.theme.OffBlackBlueHintLighter
 import com.example.foodflix.ui.theme.Pink
 import androidx.navigation.NavType
+import coil.compose.rememberAsyncImagePainter
 import com.example.foodflix.ui.ProfileScreen
 import kotlinx.coroutines.CoroutineScope
 import com.example.foodflix.ui.DiscoverScreen
@@ -170,6 +171,7 @@ fun FoodflixApp(modifier: Modifier = Modifier,
 
     val recipeRepository = RecipeRepositorySingleton.getInstance(
         RecipeDatabase.getDatabase(LocalContext.current))
+    val userImageUrl by sharedViewModel.userImageUrl.collectAsState(null)
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -195,11 +197,12 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                         .clip(CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Image(
-                        modifier = Modifier
+                    Image(// THIS ONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        painter = rememberAsyncImagePainter(userImageUrl),
+                        contentDescription = stringResource(R.string.meal_picture_description),
+                        modifier = Modifier.size(188.dp)
                             .matchParentSize(),
-                        painter = painterResource(id = R.drawable.ic_launcher_background),
-                        contentDescription = "",
+
                     )
 
                     Image(
@@ -284,6 +287,7 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                     sharedViewModel.setSearchQuery("")
                 }
                 LoginScreen(
+                    sharedViewModel = sharedViewModel,
                     navController
                 )
             }

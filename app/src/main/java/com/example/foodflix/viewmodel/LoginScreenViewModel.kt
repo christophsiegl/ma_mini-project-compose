@@ -26,6 +26,7 @@ import com.example.foodflix.repository.RecipeRepository
 import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.workers.RecipeFetchWorker
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import okhttp3.Dispatcher
 
@@ -38,10 +39,9 @@ class LoginScreenViewModel(
     private val TAG = "MainViewModel"  // 1
     private lateinit var account: Auth0  // 2
     private lateinit var context: Context  // 3
-
     private var credentialsManager: CredentialsManager? = null
 
-
+    var userImageUrl:String = ""
 
     var user by mutableStateOf(User())
 
@@ -70,11 +70,9 @@ class LoginScreenViewModel(
                     userIsAuthenticated = true
                     appJustLaunched = false
                     credentialsManager?.saveCredentials(result)
-
+                    user.picture
                     createWorkManagerTask("InsertUser",result.user.email!!)
-
-
-
+                    userImageUrl = user.picture
                 }
 
             })
@@ -97,7 +95,7 @@ class LoginScreenViewModel(
                     credentialsManager?.clearCredentials()
                     // The user successfully logged out.
                     userIsAuthenticated = false
-
+                    userImageUrl = ""
 
                 }
 

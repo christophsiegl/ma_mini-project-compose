@@ -26,11 +26,13 @@ import androidx.navigation.NavController
 import com.example.foodflix.FoodflixScreen
 import com.example.foodflix.viewmodel.LoginScreenViewModel
 import com.example.foodflix.viewmodel.LoginScreenViewModelFactory
+import com.example.foodflix.viewmodel.SharedViewModel
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun LoginScreen(
+    sharedViewModel: SharedViewModel,
     navController: NavController,
     modifier: Modifier = Modifier,
     loginScreenViewModel: LoginScreenViewModel = viewModel(factory = LoginScreenViewModelFactory())
@@ -95,6 +97,8 @@ fun LoginScreen(
 
             buttonText = stringResource(R.string.log_out_button)
             onClickAction = { loginScreenViewModel.logout() }
+
+            updatePicture(sharedViewModel,loginScreenViewModel)
         } else {
             buttonText = stringResource(R.string.log_in_button)
             onClickAction = { loginScreenViewModel.login() }
@@ -122,7 +126,9 @@ fun Title(  // 1
         )
     )
 }
-
+fun updatePicture(sharedViewModel : SharedViewModel, loginScreenViewModel: LoginScreenViewModel){
+    sharedViewModel.setUserImageUrl(loginScreenViewModel.userImageUrl)
+}
 @Composable
 fun LogButton(
     text: String,
