@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
@@ -29,11 +31,13 @@ import com.example.foodflix.model.Meal
 import com.example.foodflix.viewmodel.RecipeListViewModel
 import com.example.foodflix.viewmodel.RecipeListViewModelFactory
 import com.example.foodflix.viewmodel.SharedViewModel
+import com.example.foodflix.workers.RecipeFetchWorker
 
 @Composable
 fun DiscoverScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
+    sharedViewModel: SharedViewModel = viewModel(),
     recipeViewModel: RecipeListViewModel = viewModel(factory = RecipeListViewModelFactory(LocalContext.current))
 ){
 
@@ -45,6 +49,7 @@ fun DiscoverScreen(
 
     LaunchedEffect(Unit) {
         sharedViewModel.setCanSearch(true) // Set canSearch to true
+        recipeViewModel.createWorkManagerTask("getCanadianRecipes")
     }
 
     // already done in the init of the ViewModel, but could be useful later

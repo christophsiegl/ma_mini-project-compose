@@ -28,6 +28,15 @@ class RecipeRepository(private val database: RecipeDatabase) {
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
 
+    suspend fun getRecipesFromSearch(mealName : String) {
+        withContext(Dispatchers.IO) {
+            val mealsFromSearch = RecipeApi.recipeListRetrofitService.getMealBySearch(mealName)
+            database.recipeDatabaseDao().deleteAllRecipes()
+            database.recipeDatabaseDao().insertAll(mealsFromSearch.meals)
+        }
+        _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
+    }
+
 
     suspend fun updateUserAge(email:String,age:Int) {
         withContext(Dispatchers.IO) {

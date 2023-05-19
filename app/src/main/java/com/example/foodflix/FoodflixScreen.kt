@@ -1,10 +1,13 @@
 package com.example.foodflix
 
+import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
@@ -17,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
@@ -38,14 +42,18 @@ import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.ui.theme.Purple500
 import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.foodflix.ui.*
 import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import com.example.foodflix.ui.ProfileScreen
 import kotlinx.coroutines.CoroutineScope
 import com.example.foodflix.ui.DiscoverScreen
@@ -60,6 +68,7 @@ enum class FoodflixScreen {
     RecipeDetail
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FoodflixAppBar(
     sharedViewModel: SharedViewModel,
@@ -70,7 +79,8 @@ fun FoodflixAppBar(
 ) {
     val canSearchState by sharedViewModel.canSearch.collectAsState()
     val searchFieldVisible by sharedViewModel.searchFieldVisible.collectAsState()
-    val searchQuery = remember { mutableStateOf("") }
+    val searchQuery by sharedViewModel.searchQuery.collectAsState()
+
 
     TopAppBar(
         title = { Text(stringResource(id = R.string.app_name)) },
@@ -83,20 +93,33 @@ fun FoodflixAppBar(
                 )
             }
         },
+
         actions = {
             if (canSearchState) {
                 if (searchFieldVisible) {
                     // Display the search field
                     OutlinedTextField(
-                        value = searchQuery.value,
-                        onValueChange = { searchQuery.value = it },
+
+                        value = searchQuery,
+                        onValueChange = { sharedViewModel.setSearchQuery(it)},
                         placeholder = { Text(text = "Search") },
                         singleLine = true,
-                        modifier = Modifier.widthIn(max = 200.dp)
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = { sharedViewModel.createWorkManagerTask("searchRecipe") }
+                        ),
+                        modifier = Modifier.onKeyEvent {
+                            if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER){
+                                sharedViewModel.createWorkManagerTask("searchRecipe")
+                                true
+                            }
+                            false
+                        }
+
                     )
                 } else {
                     // Display the search icon
-                    IconButton(onClick = { sharedViewModel.setSearchFieldVisible(true)}) {
+                    IconButton(onClick = { sharedViewModel.setSearchFieldVisible(true) }) {
                         Icon(
                             imageVector = Icons.Rounded.Search,
                             contentDescription = stringResource(R.string.search),
@@ -255,6 +278,7 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                 LaunchedEffect(Unit) {
                     sharedViewModel.setCanSearch(false) // Set canSearch to false
                     sharedViewModel.setSearchFieldVisible(false)
+                    sharedViewModel.setSearchQuery("")
                 }
                 LoginScreen(
                     navController
@@ -264,8 +288,9 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                 LaunchedEffect(Unit) {
                     sharedViewModel.setCanSearch(true) // Set canSearch to true only on Discover screen
                     sharedViewModel.setSearchFieldVisible(false)
+                    sharedViewModel.setSearchQuery("")
                 }
-                DiscoverScreen(navController = navController)
+                DiscoverScreen(navController = navController, sharedViewModel = sharedViewModel )
             }
             composable(
 
@@ -275,13 +300,21 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                 LaunchedEffect(Unit) {
                     sharedViewModel.setCanSearch(false) // Set canSearch to false
                     sharedViewModel.setSearchFieldVisible(false)
+                    sharedViewModel.setSearchQuery("")
                 }
                 ProfileScreen(navController = navController)
             }
             composable(
                 route = "${FoodflixScreen.RecipeDetail.name}/{mealId}",
                 arguments = listOf(navArgument("mealId") { type = NavType.StringType })
+
+
             ){
+                LaunchedEffect(Unit) {
+                    sharedViewModel.setCanSearch(false) // Set canSearch to false
+                    sharedViewModel.setSearchFieldVisible(false)
+                    sharedViewModel.setSearchQuery("")
+                }
                 RecipeDetailScreen(navController = navController)
             }
         }

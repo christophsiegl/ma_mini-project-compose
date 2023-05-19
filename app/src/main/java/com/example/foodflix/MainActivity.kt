@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
 import com.example.foodflix.ui.theme.FoodflixTheme
 import com.example.foodflix.viewmodel.SharedViewModel
+import com.example.foodflix.viewmodel.SharedViewModelFactory
 
 class MainActivity : ComponentActivity() {
-    private val sharedViewModel by lazy { ViewModelProvider(this).get(SharedViewModel::class.java) }
+    private val sharedViewModel by lazy { ViewModelProvider(this, SharedViewModelFactory(this)).get(SharedViewModel::class.java) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

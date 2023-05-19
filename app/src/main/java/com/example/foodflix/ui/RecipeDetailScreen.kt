@@ -23,6 +23,7 @@ import com.example.foodflix.R
 import com.example.foodflix.model.MealDetail
 import com.example.foodflix.viewmodel.RecipeDetailViewModel
 import com.example.foodflix.viewmodel.RecipeDetailViewModelFactory
+import com.example.foodflix.viewmodel.SharedViewModel
 import com.example.foodflix.workers.RecipeFetchWorker
 
 @Composable

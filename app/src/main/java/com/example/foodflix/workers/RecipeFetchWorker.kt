@@ -15,6 +15,7 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
         const val GET_TOP_RATED_RECIPES = "getTopRatedRecipes"
         const val INSERT_USER = "InsertUser"
         const val GET_RECIPE_DETAIL = "setRecipeDetail"
+        const val GET_RECIPE_FROM_SEARCH = "searchRecipe"
     }
 
     private val recipeRepository = RecipeRepositorySingleton.getInstance(RecipeDatabase.getDatabase(appContext))
@@ -22,7 +23,7 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
     override suspend fun doWork(): Result = coroutineScope {
         try {
             val requestType = inputData.getString("requestType")
-            val email = inputData.getString("email")
+
 
             // Call the API and get the recipes based on the request type
             when (requestType) {
@@ -32,6 +33,16 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
                 RequestType.GET_RECIPE_DETAIL -> {
                     val mealID = inputData.getString("mealID")
                     recipeRepository.getRecipeDetails(mealID!!)
+                }
+
+                RequestType.INSERT_USER -> {
+                    val email = inputData.getString("email")
+                    recipeRepository.insertUser(email!!)
+                }
+
+                RequestType.GET_RECIPE_FROM_SEARCH -> {
+                    val mealName = inputData.getString("mealName")
+                    recipeRepository.getRecipesFromSearch(mealName!!)
                 }
                 else -> throw IllegalArgumentException("Invalid request type")
             }
