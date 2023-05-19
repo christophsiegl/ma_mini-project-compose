@@ -113,9 +113,6 @@ fun FoodflixApp(modifier: Modifier = Modifier){
 
     val drawerWidth = 200.dp
 
-    val recipeRepository = RecipeRepositorySingleton.getInstance(
-        RecipeDatabase.getDatabase(LocalContext.current))
-
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {

@@ -14,6 +14,7 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
         const val GET_CANADIAN_RECIPES = "getCanadianRecipes"
         const val GET_TOP_RATED_RECIPES = "getTopRatedRecipes"
         const val GET_RECIPE_DETAIL = "setRecipeDetail"
+        const val SET_FAVOURITE_RECIPE = "setFavouriteRecipe"
     }
 
     private val recipeRepository = RecipeRepositorySingleton.getInstance(RecipeDatabase.getDatabase(appContext))

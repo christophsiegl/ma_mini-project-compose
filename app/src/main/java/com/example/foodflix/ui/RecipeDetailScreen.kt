@@ -90,7 +90,7 @@ fun RecipeDetailScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
-                    onClick = { "TODO:" },
+                    onClick = { recipeDetailViewModel.setAsFavouriteRecipe(RecipeFetchWorker.RequestType.SET_FAVOURITE_RECIPE, selectedMealId!!) },
                     modifier = modifier.widthIn(min = 250.dp)
                 ) {
                     Text("Save Recipe")
