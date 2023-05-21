@@ -197,7 +197,7 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                         .clip(CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Image(// THIS ONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    Image(
                         painter = rememberAsyncImagePainter(userImageUrl),
                         contentDescription = stringResource(R.string.meal_picture_description),
                         modifier = Modifier.size(188.dp)
