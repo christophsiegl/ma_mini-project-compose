@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
@@ -26,13 +28,18 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.foodflix.FoodflixScreen
 import com.example.foodflix.R
 import com.example.foodflix.model.Meal
+import com.example.foodflix.ui.theme.OffBlackBlueHint
+import com.example.foodflix.ui.theme.OffBlackBlueHintDarker
 import com.example.foodflix.viewmodel.RecipeListViewModel
 import com.example.foodflix.viewmodel.RecipeListViewModelFactory
+import com.example.foodflix.viewmodel.SharedViewModel
+import com.example.foodflix.workers.RecipeFetchWorker
 
 @Composable
 fun DiscoverScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
+    sharedViewModel: SharedViewModel = viewModel(),
     recipeViewModel: RecipeListViewModel = viewModel(factory = RecipeListViewModelFactory(LocalContext.current))
 ){
 
@@ -40,6 +47,12 @@ fun DiscoverScreen(
         NoConnectionDialog()
     }
     val recipesFromViewModel by recipeViewModel.recipeList.observeAsState(emptyList())
+    val canSearch by sharedViewModel.canSearch.collectAsState()
+
+    LaunchedEffect(Unit) {
+        sharedViewModel.setCanSearch(true) // Set canSearch to true
+        recipeViewModel.createWorkManagerTask("getCanadianRecipes")
+    }
 
     // already done in the init of the ViewModel, but could be useful later
     //LaunchedEffect(Unit) {
@@ -56,9 +69,9 @@ fun BrowseContent(recipes: List<Meal>, navController: NavController) {
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 180.dp),
         contentPadding = PaddingValues(
             start = 2.dp,
-            top = 2.dp,
             end = 2.dp,
-            bottom = 2.dp
+            top = 6.dp,
+            bottom = 6.dp
         ),
         content = {
             items(recipes.size) {
@@ -71,23 +84,24 @@ fun BrowseContent(recipes: List<Meal>, navController: NavController) {
 fun RecipeListItem(meal: Meal, navController: NavController) {
     Row {
         Card(
-            backgroundColor = Color.Gray,
+            backgroundColor = OffBlackBlueHintDarker,
             modifier = Modifier
-                .padding(4.dp)
+                .padding(top = 10.dp, bottom = 10.dp, start=8.dp, end=8.dp)
                 .fillMaxWidth()
                 .clickable {
                     navController.navigate("${FoodflixScreen.RecipeDetail.name}/${meal.idMeal}")
                 },
             elevation = 0.dp
         ) {
-            Column {
+            Column(
+            ) {
                 Image(
                     painter = rememberAsyncImagePainter(meal.strMealThumb),
                     contentDescription = stringResource(R.string.meal_picture_description),
-                    modifier = Modifier.size(226.dp)
+                    modifier = Modifier.size(188.dp)
                 )
-                Text(text = meal.strMeal, style = MaterialTheme.typography.h6, fontSize = 18.sp)
-                Text(text = "VIEW DETAIL", style = MaterialTheme.typography.caption)
+                Text( text = meal.strMeal, style = MaterialTheme.typography.h6, fontSize = 22.sp,
+                    modifier = Modifier.height(55.dp))
             }
         }
     }

@@ -22,14 +22,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.foodflix.FoodflixScreen
 import com.example.foodflix.viewmodel.LoginScreenViewModel
 import com.example.foodflix.viewmodel.LoginScreenViewModelFactory
+import com.example.foodflix.viewmodel.SharedViewModel
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun LoginScreen(
-    onToHomeScreenButtonClicked: () -> Unit = {},
+    sharedViewModel: SharedViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier,
     loginScreenViewModel: LoginScreenViewModel = viewModel(factory = LoginScreenViewModelFactory())
 ){
@@ -77,6 +81,11 @@ fun LoginScreen(
                 url = loginScreenViewModel.user.picture,
                 description = loginScreenViewModel.user.name,
             )
+            LogButton(
+                text = "Go to settings",
+                onClick = { navController.navigate("${FoodflixScreen.Profile.name}/${loginScreenViewModel.user.email}") },
+            )
+
 
         }
 
@@ -88,6 +97,8 @@ fun LoginScreen(
 
             buttonText = stringResource(R.string.log_out_button)
             onClickAction = { loginScreenViewModel.logout() }
+
+            updatePicture(sharedViewModel,loginScreenViewModel)
         } else {
             buttonText = stringResource(R.string.log_in_button)
             onClickAction = { loginScreenViewModel.login() }
@@ -115,7 +126,9 @@ fun Title(  // 1
         )
     )
 }
-
+fun updatePicture(sharedViewModel : SharedViewModel, loginScreenViewModel: LoginScreenViewModel){
+    sharedViewModel.setUserImageUrl(loginScreenViewModel.userImageUrl)
+}
 @Composable
 fun LogButton(
     text: String,

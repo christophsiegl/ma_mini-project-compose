@@ -3,6 +3,7 @@ package com.example.foodflix.repository
 import androidx.lifecycle.LiveData
 import com.example.foodflix.database.RecipeDatabase
 import com.example.foodflix.model.Meal
+import com.example.foodflix.model.UserData
 import com.example.foodflix.model.MealDetail
 import com.example.foodflix.network.RecipeApi
 import com.example.foodflix.workers.RecipeFetchWorker
@@ -25,6 +26,40 @@ class RecipeRepository(private val database: RecipeDatabase) {
             database.recipeDatabaseDao().insertAll(popularMeals.meals)
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
+    }
+
+    suspend fun getRecipesFromSearch(mealName : String) {
+        withContext(Dispatchers.IO) {
+            val mealsFromSearch = RecipeApi.recipeListRetrofitService.getMealBySearch(mealName)
+            database.recipeDatabaseDao().deleteAllRecipes()
+            database.recipeDatabaseDao().insertAll(mealsFromSearch.meals)
+        }
+        _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
+    }
+
+
+    suspend fun updateUserAge(email:String,age:Int) {
+        withContext(Dispatchers.IO) {
+            database.recipeDatabaseDao().update(email,age) //update Table
+
+        }
+        _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
+    }
+
+    suspend fun insertUser(email:String) {
+        withContext(Dispatchers.IO) {
+            database.recipeDatabaseDao().insert(UserData(email,0)) //Insert new User
+
+        }
+        _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
+    }
+
+    suspend fun getAgeFromUser(email: String): Int {
+        return database.recipeDatabaseDao().getAge(email)
+    }
+
+    suspend fun getAllUsers(): List<UserData> {
+        return database.recipeDatabaseDao().getAllUsers()
     }
 
     suspend fun getRecipeDetails(id: String) {

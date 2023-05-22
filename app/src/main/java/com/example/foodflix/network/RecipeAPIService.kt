@@ -38,6 +38,12 @@ interface RecipeAPIService {
     ): RecipesResponse
 
     @GET("search.php")
+    suspend fun getMealBySearch(
+        @Query("s")
+        name:String
+    ): RecipesResponse
+
+    @GET("search.php")
     suspend fun getMealByFirstLetter(
         @Query("f")
         firstLetter: Char
