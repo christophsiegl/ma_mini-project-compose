@@ -86,7 +86,6 @@ fun FoodflixAppBar(
     val searchFieldVisible by sharedViewModel.searchFieldVisible.collectAsState()
     val searchQuery by sharedViewModel.searchQuery.collectAsState()
 
-
     TopAppBar(
         title = { Text(stringResource(id = R.string.app_name)) },
         navigationIcon = {
@@ -103,7 +102,6 @@ fun FoodflixAppBar(
                 if (searchFieldVisible) {
                     // Display the search field
                     OutlinedTextField(
-
                         value = searchQuery,
                         onValueChange = { sharedViewModel.setSearchQuery(it)},
                         placeholder = { Text(text = "Search") },
@@ -119,7 +117,6 @@ fun FoodflixAppBar(
                             }
                             false
                         }
-
                     )
                 } else {
                     // Display the search icon
@@ -201,7 +198,6 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                         modifier = Modifier.size(188.dp)
                             .matchParentSize(),
                     )
-
                     Image(
                         modifier = Modifier
                             .scale(1.4f),
@@ -265,16 +261,8 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                     sharedViewModel.setCanSearch(false) // Set canSearch to false
                 }
                 HomeScreen(
-                    //quantityOptions = quantityOptions, //can be used to pass arguments!!
-                    onToSearchScreenClicked = {
-                        navController.navigate(FoodflixScreen.Discover.name)
-                    },
-                    onToLoginScreenClicked = {
-                        navController.navigate(FoodflixScreen.Login.name)
-                    },
-                    onToDiscoverScreenClicked = {
-                        navController.navigate(FoodflixScreen.Discover.name)
-                    }
+                    navController = navController,
+                    sharedViewModel = sharedViewModel
                 )
             }
             composable(route = FoodflixScreen.Login.name) {
@@ -294,19 +282,22 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                     sharedViewModel.setSearchFieldVisible(false)
                     sharedViewModel.setSearchQuery("")
                 }
-                DiscoverScreen(navController = navController, sharedViewModel = sharedViewModel )
+                DiscoverScreen(
+                    navController = navController,
+                    sharedViewModel = sharedViewModel
+                )
             }
             composable(
-
-                route = "${FoodflixScreen.Profile.name}/{email}",
-                arguments = listOf(navArgument("email") { type = NavType.StringType })
+                route = FoodflixScreen.Profile.name,
             ){
                 LaunchedEffect(Unit) {
                     sharedViewModel.setCanSearch(false) // Set canSearch to false
                     sharedViewModel.setSearchFieldVisible(false)
                     sharedViewModel.setSearchQuery("")
                 }
-                ProfileScreen(navController = navController)
+                ProfileScreen(
+                    sharedViewModel = sharedViewModel,
+                    navController = navController)
             }
             composable(
                 route = "${FoodflixScreen.RecipeDetail.name}/{mealId}",
@@ -317,7 +308,10 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                     sharedViewModel.setSearchFieldVisible(false)
                     sharedViewModel.setSearchQuery("")
                 }
-                RecipeDetailScreen(navController = navController)
+                RecipeDetailScreen(
+                    navController = navController,
+                    sharedViewModel = sharedViewModel
+                )
             }
         }
     }

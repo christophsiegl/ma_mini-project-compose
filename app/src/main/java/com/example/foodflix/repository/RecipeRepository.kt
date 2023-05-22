@@ -41,21 +41,37 @@ class RecipeRepository(private val database: RecipeDatabase) {
     suspend fun updateUserAge(email:String,age:Int) {
         withContext(Dispatchers.IO) {
             database.recipeDatabaseDao().update(email,age) //update Table
-
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
 
+    suspend fun addIdToFavouriteRecipeIds(email: String, recipeId: String){
+        withContext(Dispatchers.IO){
+            var updatedRecipeIdList: String = database.recipeDatabaseDao().getFavouriteMealIds(email)
+
+            val list = updatedRecipeIdList.split(":") // add only when not in list!
+            if(!(list.contains(recipeId))){
+                updatedRecipeIdList += ":"
+                updatedRecipeIdList += recipeId
+                database.recipeDatabaseDao().updateFavouriteIds(email, updatedRecipeIdList)
+            }
+        }
+        _lastRequest = RecipeFetchWorker.RequestType.SET_FAVOURITE_RECIPE
+    }
+
     suspend fun insertUser(email:String) {
         withContext(Dispatchers.IO) {
-            database.recipeDatabaseDao().insert(UserData(email,0)) //Insert new User
-
+            database.recipeDatabaseDao().insert(UserData(email,0, "")) //Insert new User
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
 
     suspend fun getAgeFromUser(email: String): Int {
         return database.recipeDatabaseDao().getAge(email)
+    }
+
+    suspend fun getFavouriteRecipes(email: String): String{
+        return database.recipeDatabaseDao().getFavouriteMealIds(email)
     }
 
     suspend fun getAllUsers(): List<UserData> {

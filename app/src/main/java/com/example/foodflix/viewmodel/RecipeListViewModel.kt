@@ -29,6 +29,10 @@ class RecipeListViewModel(
     val recipeList: LiveData<List<Meal>>
         get() = _recipeList
 
+    private val _favRecipeList = repository.recipes
+    val favRecipeList: LiveData<List<Meal>>
+        get() = _favRecipeList
+
     private val _dataFetchStatus = MutableLiveData<DataFetchStatus>()
     val dataFetchStatus: LiveData<DataFetchStatus>
         get() {

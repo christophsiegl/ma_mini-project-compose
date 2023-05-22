@@ -26,6 +26,12 @@ interface RecipeDatabaseDao {
     @Query("SELECT EXISTS(SELECT age from UserData WHERE email = :email)")
     suspend fun getAge(email:String) : Int
 
+    @Query("UPDATE UserData SET favouriteRecipesIds = :idList WHERE email = :email")
+    suspend fun updateFavouriteIds(email: String, idList: String)
+
+    @Query("SELECT favouriteRecipesIds from UserData WHERE email = :email")
+    suspend fun getFavouriteMealIds(email: String) : String
+
     // Maybe we need this later, im not sure.
     //@Query("UPDATE recipes SET mealDetail =  :mealDetail WHERE idMeal = :id")
     //suspend fun insertDetails(mealDetail: MealDetail, id: Long)

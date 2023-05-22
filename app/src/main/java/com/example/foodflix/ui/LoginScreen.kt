@@ -24,11 +24,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.foodflix.FoodflixScreen
+import com.example.foodflix.utils.Constants.NOT_LOGGED_IN
 import com.example.foodflix.viewmodel.LoginScreenViewModel
 import com.example.foodflix.viewmodel.LoginScreenViewModelFactory
 import com.example.foodflix.viewmodel.SharedViewModel
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun LoginScreen(
@@ -37,9 +37,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     loginScreenViewModel: LoginScreenViewModel = viewModel(factory = LoginScreenViewModelFactory())
 ){
-
     val corutineScope = rememberCoroutineScope()
-
     loginScreenViewModel.setContext(LocalContext.current)
 
     LaunchedEffect(Unit){
@@ -55,9 +53,7 @@ fun LoginScreen(
         val Title = if (loginScreenViewModel.userIsAuthenticated) {
             stringResource(R.string.logged_in_title)
         } else {
-
             if (loginScreenViewModel.appJustLaunched) {
-
                 stringResource(R.string.initial_title)
             } else {
                 stringResource(R.string.logged_out_title)
@@ -66,7 +62,6 @@ fun LoginScreen(
         Title(
             text = Title
         )
-
 
         if (loginScreenViewModel.userIsAuthenticated) {
             UserInfoRow(
@@ -83,10 +78,8 @@ fun LoginScreen(
             )
             LogButton(
                 text = "Go to settings",
-                onClick = { navController.navigate("${FoodflixScreen.Profile.name}/${loginScreenViewModel.user.email}") },
+                onClick = { navController.navigate(FoodflixScreen.Profile.name)}
             )
-
-
         }
 
         // Button
@@ -94,14 +87,15 @@ fun LoginScreen(
         val buttonText: String
         val onClickAction: () -> Unit
         if (loginScreenViewModel.userIsAuthenticated) {
-
             buttonText = stringResource(R.string.log_out_button)
             onClickAction = { loginScreenViewModel.logout() }
 
-            updatePicture(sharedViewModel,loginScreenViewModel)
+            sharedViewModel.setUserImageUrl(loginScreenViewModel.userImageUrl)
+            sharedViewModel.setUserMail(loginScreenViewModel.user.email)
         } else {
             buttonText = stringResource(R.string.log_in_button)
             onClickAction = { loginScreenViewModel.login() }
+            sharedViewModel.setUserMail(NOT_LOGGED_IN)
         }
         LogButton(
             text = buttonText,
@@ -109,8 +103,6 @@ fun LoginScreen(
         )
     }
 }
-
-
 
 @Composable
 fun Title(  // 1
@@ -126,9 +118,7 @@ fun Title(  // 1
         )
     )
 }
-fun updatePicture(sharedViewModel : SharedViewModel, loginScreenViewModel: LoginScreenViewModel){
-    sharedViewModel.setUserImageUrl(loginScreenViewModel.userImageUrl)
-}
+
 @Composable
 fun LogButton(
     text: String,

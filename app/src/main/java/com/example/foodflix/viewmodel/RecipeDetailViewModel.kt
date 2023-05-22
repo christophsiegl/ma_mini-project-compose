@@ -75,9 +75,10 @@ class RecipeDetailViewModel(
         _workManager.enqueue(request)
     }
 
-    fun setAsFavouriteRecipe(requestString: String, mealID: String) {
+    fun setAsFavouriteRecipe(requestString: String, email: String, mealID: String) {
         val inputData = Data.Builder()
             .putString("requestType", requestString)
+            .putString("email", email)
             .putString("mealID", mealID)
             .build()
 

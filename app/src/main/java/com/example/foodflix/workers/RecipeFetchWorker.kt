@@ -42,6 +42,11 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
                     val mealName = inputData.getString("mealName")
                     recipeRepository.getRecipesFromSearch(mealName!!)
                 }
+                RequestType.SET_FAVOURITE_RECIPE -> {
+                    val email = inputData.getString("email")
+                    val mealId = inputData.getString("mealID")
+                    recipeRepository.addIdToFavouriteRecipeIds(email!!, mealId!!)
+                }
                 else -> throw IllegalArgumentException("Invalid request type")
             }
             Result.success()
