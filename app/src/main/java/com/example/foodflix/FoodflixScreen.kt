@@ -70,7 +70,6 @@ enum class FoodflixScreen {
     Profile,
     Home,
     Discover,
-    ThingsAtHome,
     RecipeDetail
 }
 
@@ -157,11 +156,6 @@ fun FoodflixApp(modifier: Modifier = Modifier,
             name = stringResource(R.string.discover),
             route = FoodflixScreen.Discover.name,
             icon = Icons.Rounded.Search,
-        ),
-        BottomNavItem(
-            name = stringResource(R.string.settings),
-            route = FoodflixScreen.Profile.name,
-            icon = Icons.Rounded.Settings,
         ),
     )
 

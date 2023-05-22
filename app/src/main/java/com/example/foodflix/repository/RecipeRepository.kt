@@ -29,6 +29,10 @@ class RecipeRepository(private val database: RecipeDatabase) {
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
 
+    suspend fun deleteAllFromRecipes(){
+        database.recipeDatabaseDao().deleteAllRecipes()
+    }
+
     suspend fun getRecipesFromIDs(MealIDs: List<String>) {
         withContext(Dispatchers.IO) {
 

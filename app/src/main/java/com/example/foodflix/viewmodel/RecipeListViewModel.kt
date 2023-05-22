@@ -24,6 +24,7 @@ class RecipeListViewModel(
         )
     )
 ) : ViewModel() {
+    private val secretrepository = repository
     private val _workManager = WorkManager.getInstance(context)
     private val _recipeList = repository.recipes
     val recipeList: LiveData<List<Meal>>
@@ -62,6 +63,11 @@ class RecipeListViewModel(
             _navigateToMovieDetail.value = null
         }
     */
+
+    suspend fun deleteAllMeals(){
+        secretrepository.deleteAllFromRecipes()
+    }
+
     fun createWorkManagerTask(requestString: String) {
         val inputData = Data.Builder()
             .putString("requestType", requestString)

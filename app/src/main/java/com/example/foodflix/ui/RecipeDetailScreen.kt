@@ -17,6 +17,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -150,6 +152,7 @@ fun RecipeDetailScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
+                /*
                 IconButton(onClick = { }) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Default.Share, contentDescription = "", tint = Color.White)
@@ -163,6 +166,7 @@ fun RecipeDetailScreen(
                         Text(text = "LIKE", fontSize = 12.sp)
                     }
                 }
+                */
 
                 IconButton(onClick = {
                     recipeDetailViewModel.setAsFavouriteRecipe(
@@ -183,18 +187,33 @@ fun RecipeDetailScreen(
                     .layoutId("text")
                     .background(OffBlackBlueHintLighter)
                     .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    modifier = Modifier
-                        .padding(8.dp),
-                    text = "Instructions: \n" + recipeDetail[0].strInstructions,
-                    fontSize = 20.sp,
+                    text = "Instructions",
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(
+                        textAlign = TextAlign.Center,
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 25.sp,
+                    )
                 )
 
-                //Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(), // Adjust the modifier to fill the available width
+                    text = recipeDetail[0].strInstructions,
+                    fontSize = 17.sp,
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
                 IngredientsTable(mealDetail = recipeDetail[0])
-                //Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
+
         }
     }
 }

@@ -50,9 +50,9 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
                 RequestType.GET_RECIPE_DETAIL_SIMPLE -> {
                     val mealIDs = inputData.getString("mealIDs")
 
-                    val tempMealId = mealIDs?.split(":")
+                    var tempMealId = mealIDs?.split(":")
                     if (tempMealId != null) {
-                        tempMealId.drop(1)
+                        tempMealId = tempMealId.drop(1)
                         recipeRepository.getRecipesFromIDs(tempMealId)
                     }
                 }

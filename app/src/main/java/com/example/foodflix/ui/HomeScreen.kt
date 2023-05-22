@@ -1,5 +1,6 @@
 package com.example.foodflix.ui
 
+import android.graphics.Paint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,6 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,29 +50,119 @@ fun HomeScreen(
     val email by sharedViewModel.userMail.collectAsState()
     val recipeList by recipeListViewModel.recipeList.observeAsState()
 
-    LaunchedEffect(Unit) {
+    // Trigger the worker when recipeIds value changes
+    LaunchedEffect(recipeIds) {
+        recipeListViewModel.deleteAllMeals()
         if (email?.isNotEmpty() == true) {
             viewModel.getFavouriteRecipeIdsFromDatabase(email!!)
         }
-    }
 
-    Column {
-        Text(text = "Meal Details:")
-        if(recipeIds?.isNotEmpty() == true){
+        if (recipeIds?.isNotEmpty() == true) {
             viewModel.createWorkManagerTaskMealDetail(RecipeFetchWorker.RequestType.GET_RECIPE_DETAIL_SIMPLE, recipeIds)
         }
+    }
 
-        // Debugging
-        Text(text = "\n\n\nMeal IDs saved:")
-        val tempMealId = recipeIds?.split(":")
-        val tempMealIds = recipeIds?.toString()
-
-        if (tempMealId != null) {
-            tempMealId.drop(1)
+    Column (modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentSize(Alignment.Center)
+        .padding(top = 10.dp)
+    ){
+        Spacer(modifier = Modifier.height(20.dp))
+        if (email?.isNotEmpty() == true) {
+            TitleHome(text = "Saved Meals")
+        } else {
+            TitleHome(text = "Foodflix")
         }
-        if (tempMealId != null) {
-            for (mealID in tempMealId) {
-                Text(text = mealID.toString())
+    }
+
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentSize(Alignment.Center)
+        .padding(top = 10.dp)
+    )
+    {
+        if (email?.isNotEmpty() == true) {
+            Column {
+                Spacer(modifier = Modifier.height(65.dp))
+                recipeList?.let { BrowseContentHome(recipes = it, navController) }
+            }
+        }
+        else{
+            Spacer(modifier = Modifier.height(80.dp))
+            TitleHomeSmall(text = "Please sign in to see your saved meals!")
+        }
+    }
+}
+
+@Composable
+fun BrowseContentHome(recipes: List<Meal>, navController: NavController) {
+    LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 180.dp),
+        contentPadding = PaddingValues(
+            start = 2.dp,
+            end = 2.dp,
+            top = 6.dp,
+            bottom = 6.dp
+        ),
+        content = {
+            items(recipes.size) {
+                RecipeListItemHome(meal = recipes[it], navController)
+            }
+        }
+    )
+}
+
+@Composable
+fun TitleHome(  // 1
+    text: String,
+) {
+    Text(  // 2
+        text = text,
+        style = TextStyle(
+            textAlign = TextAlign.Center,
+            fontFamily = FontFamily.Default,
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp,  // 3
+        )
+    )
+}
+
+@Composable
+fun TitleHomeSmall(  // 1
+    text: String,
+) {
+    Text(  // 2
+        text = text,
+        style = TextStyle(
+            textAlign = TextAlign.Center,
+            fontFamily = FontFamily.Default,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 20.sp,  // 3
+        )
+    )
+}
+
+@Composable
+fun RecipeListItemHome(meal: Meal, navController: NavController) {
+    Row {
+        Card(
+            backgroundColor = OffBlackBlueHintDarker,
+            modifier = Modifier
+                .padding(top = 10.dp, bottom = 10.dp, start = 8.dp, end = 8.dp)
+                .fillMaxWidth()
+                .clickable {
+                    navController.navigate("${FoodflixScreen.RecipeDetail.name}/${meal.idMeal}")
+                },
+            elevation = 0.dp
+        ) {
+            Column(
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(meal.strMealThumb),
+                    contentDescription = stringResource(R.string.meal_picture_description),
+                    modifier = Modifier.size(188.dp)
+                )
+                Text( text = meal.strMeal, style = MaterialTheme.typography.h6, fontSize = 22.sp,
+                    modifier = Modifier.height(55.dp))
             }
         }
     }
