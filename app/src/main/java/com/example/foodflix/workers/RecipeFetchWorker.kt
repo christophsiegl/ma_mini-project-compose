@@ -12,11 +12,11 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
     object RequestType {
         const val GET_CANADIAN_RECIPES = "getCanadianRecipes"
-        const val GET_TOP_RATED_RECIPES = "getTopRatedRecipes"
         const val INSERT_USER = "InsertUser"
         const val GET_RECIPE_DETAIL = "setRecipeDetail"
         const val SET_FAVOURITE_RECIPE = "setFavouriteRecipe"
         const val GET_RECIPE_FROM_SEARCH = "searchRecipe"
+        const val GET_RECIPE_DETAIL_SIMPLE = "getRecipesFromId"
     }
 
     private val recipeRepository = RecipeRepositorySingleton.getInstance(RecipeDatabase.getDatabase(appContext))
@@ -46,6 +46,15 @@ class RecipeFetchWorker(appContext: Context, params: WorkerParameters) :
                     val email = inputData.getString("email")
                     val mealId = inputData.getString("mealID")
                     recipeRepository.addIdToFavouriteRecipeIds(email!!, mealId!!)
+                }
+                RequestType.GET_RECIPE_DETAIL_SIMPLE -> {
+                    val mealIDs = inputData.getString("mealIDs")
+
+                    val tempMealId = mealIDs?.split(":")
+                    if (tempMealId != null) {
+                        tempMealId.drop(1)
+                        recipeRepository.getRecipesFromIDs(tempMealId)
+                    }
                 }
                 else -> throw IllegalArgumentException("Invalid request type")
             }

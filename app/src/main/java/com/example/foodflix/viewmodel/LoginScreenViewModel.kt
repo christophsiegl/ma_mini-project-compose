@@ -86,7 +86,6 @@ class LoginScreenViewModel() : ViewModel() {
                     userImageUrl = ""
 
                 }
-
             })
     }
 

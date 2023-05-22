@@ -43,6 +43,12 @@ interface RecipeAPIService {
         name:String
     ): RecipesResponse
 
+    @GET("lookup.php")
+    suspend fun getMealByIdBASIC(
+        @Query("i")
+        id: String,
+    ): RecipesResponse
+
     @GET("search.php")
     suspend fun getMealByFirstLetter(
         @Query("f")

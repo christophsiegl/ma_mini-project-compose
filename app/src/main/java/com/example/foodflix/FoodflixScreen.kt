@@ -48,6 +48,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -198,12 +199,15 @@ fun FoodflixApp(modifier: Modifier = Modifier,
                         modifier = Modifier.size(188.dp)
                             .matchParentSize(),
                     )
+                    /*
+                    // default placeholder image
                     Image(
                         modifier = Modifier
                             .scale(1.4f),
                         painter = painterResource(id = R.drawable.ic_launcher_foreground),
                         contentDescription = "",
                     )
+                    */
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))

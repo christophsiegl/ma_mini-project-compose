@@ -126,4 +126,7 @@ dependencies {
     //grids and lists
     implementation "androidx.compose.foundation:foundation:1.4.3"
 
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.8'
+
 }
