@@ -17,41 +17,39 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.foodflix.model.UserData
-import com.example.foodflix.viewmodel.LoginScreenViewModel
-import com.example.foodflix.viewmodel.LoginScreenViewModelFactory
-import com.example.foodflix.viewmodel.ProfileScreenViewModel
-import com.example.foodflix.viewmodel.ProfileScreenViewModelFactory
+import com.example.foodflix.utils.Constants.NOT_LOGGED_IN
+import com.example.foodflix.viewmodel.*
 import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
+    sharedViewModel: SharedViewModel,
     navController: NavController,
     modifier: Modifier = Modifier,
     profileScreenViewModel: ProfileScreenViewModel = viewModel(factory = ProfileScreenViewModelFactory(LocalContext.current))
 ){
-    val email = navController.currentBackStackEntry?.arguments?.getString("email")
-
-
+    val email by sharedViewModel.userMail.collectAsState()
     val corutineScope = rememberCoroutineScope()
 
     var ageToPrint by remember { mutableStateOf("") }
     var ageList by remember { mutableStateOf(emptyList<UserData>()) }
     LaunchedEffect(key1 = email){
-        corutineScope.launch {
-            val ageFromDatabase = profileScreenViewModel.getAllUsers()
-            ageList = ageFromDatabase
-            Log.d("AgeList", "All ages from database: $ageList")
+        if(email != NOT_LOGGED_IN) {
+            corutineScope.launch {
+                val ageFromDatabase = profileScreenViewModel.getAllUsers()
+                ageList = ageFromDatabase
+                Log.d("AgeList", "All ages from database: $ageList")
 
-            // Iterate through the ageList
-            for (age in ageList) {
-
-                if(age.email == email){
-                    ageToPrint = age.age.toString()
+                // Iterate through the ageList
+                for (age in ageList) {
+                    if (age.email == email) {
+                        ageToPrint = age.age.toString()
+                    }
+                    // Perform operations on each age
+                    // Example: Log each age value
+                    Log.d("EMAIL", "Age value: ${age.email}")
+                    Log.d("Age", "Age value: ${age.age}")
                 }
-                // Perform operations on each age
-                // Example: Log each age value
-                Log.d("EMAIL", "Age value: ${age.email}")
-                Log.d("Age", "Age value: ${age.age}")
             }
         }
     }
@@ -60,6 +58,10 @@ fun ProfileScreen(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = email!!
+        )
+
         TextField(
             value = ageToPrint,
             onValueChange = { newText ->

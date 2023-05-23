@@ -77,7 +77,8 @@ fun BrowseContent(recipes: List<Meal>, navController: NavController) {
             items(recipes.size) {
                 RecipeListItem(meal = recipes[it], navController)
             }
-        })
+        }
+    )
 }
 
 @Composable

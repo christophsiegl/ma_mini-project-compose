@@ -13,7 +13,8 @@ import kotlinx.coroutines.withContext
 
 class RecipeRepository(private val database: RecipeDatabase) {
     val recipes: LiveData<List<Meal>> = database.recipeDatabaseDao().getAllRecipesAsLiveData()
-    val recipeDetail: LiveData<List<MealDetail>> = database.recipeDatabaseDao().getAllRecipeDetailsAsLiveData()
+    val recipeDetail: LiveData<List<MealDetail>> =
+        database.recipeDatabaseDao().getAllRecipeDetailsAsLiveData()
 
     private var _lastRequest: String? = null
     val lastRequest: String?
@@ -28,7 +29,27 @@ class RecipeRepository(private val database: RecipeDatabase) {
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
 
-    suspend fun getRecipesFromSearch(mealName : String) {
+    suspend fun deleteAllFromRecipes(){
+        database.recipeDatabaseDao().deleteAllRecipes()
+    }
+
+    suspend fun getRecipesFromIDs(MealIDs: List<String>) {
+        withContext(Dispatchers.IO) {
+
+            database.recipeDatabaseDao().deleteAllRecipes()
+            val tempMeals = mutableListOf<Meal>()
+
+            MealIDs.forEach {
+                val mealsFromID = RecipeApi.recipeListRetrofitService.getMealByIdBASIC(it)
+                var meals = (mealsFromID.meals)
+                tempMeals.add(meals[0])
+            }
+
+            database.recipeDatabaseDao().insertAll(tempMeals)
+        }
+    }
+
+    suspend fun getRecipesFromSearch(mealName: String) {
         withContext(Dispatchers.IO) {
             val mealsFromSearch = RecipeApi.recipeListRetrofitService.getMealBySearch(mealName)
             database.recipeDatabaseDao().deleteAllRecipes()
@@ -37,25 +58,41 @@ class RecipeRepository(private val database: RecipeDatabase) {
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
 
-
-    suspend fun updateUserAge(email:String,age:Int) {
+    suspend fun updateUserAge(email: String, age: Int) {
         withContext(Dispatchers.IO) {
-            database.recipeDatabaseDao().update(email,age) //update Table
-
+            database.recipeDatabaseDao().update(email, age) //update Table
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
 
-    suspend fun insertUser(email:String) {
+    suspend fun addIdToFavouriteRecipeIds(email: String, recipeId: String) {
         withContext(Dispatchers.IO) {
-            database.recipeDatabaseDao().insert(UserData(email,0)) //Insert new User
+            var updatedRecipeIdList: String =
+                database.recipeDatabaseDao().getFavouriteMealIds(email)
 
+            val list = updatedRecipeIdList.split(":") // add only when not in list!
+            if (!(list.contains(recipeId))) {
+                updatedRecipeIdList += ":"
+                updatedRecipeIdList += recipeId
+                database.recipeDatabaseDao().updateFavouriteIds(email, updatedRecipeIdList)
+            }
+        }
+        _lastRequest = RecipeFetchWorker.RequestType.SET_FAVOURITE_RECIPE
+    }
+
+    suspend fun insertUser(email: String) {
+        withContext(Dispatchers.IO) {
+            database.recipeDatabaseDao().insert(UserData(email, 0, "")) //Insert new User
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_CANADIAN_RECIPES
     }
 
     suspend fun getAgeFromUser(email: String): Int {
         return database.recipeDatabaseDao().getAge(email)
+    }
+
+    suspend fun getFavouriteRecipes(email: String): String {
+        return database.recipeDatabaseDao().getFavouriteMealIds(email)
     }
 
     suspend fun getAllUsers(): List<UserData> {
@@ -70,6 +107,8 @@ class RecipeRepository(private val database: RecipeDatabase) {
         }
         _lastRequest = RecipeFetchWorker.RequestType.GET_RECIPE_DETAIL
     }
+
+
 }
 
 object RecipeRepositorySingleton {

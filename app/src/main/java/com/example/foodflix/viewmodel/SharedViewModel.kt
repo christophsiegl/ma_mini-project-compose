@@ -25,11 +25,18 @@ class SharedViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
+    private val _userMail = MutableStateFlow<String?>(null)
+    val userMail: StateFlow<String?> = _userMail.asStateFlow()
+
     private val _userImageUrl = MutableStateFlow<String?>(null)
     val userImageUrl: StateFlow<String?> = _userImageUrl.asStateFlow()
 
     fun setUserImageUrl(imageUrl: String?) {
         _userImageUrl.value = imageUrl
+    }
+
+    fun setUserMail(mail: String?) {
+        _userMail.value = mail
     }
 
     fun setSearchQuery(query: String) {
@@ -38,7 +45,6 @@ class SharedViewModel(
     fun setCanSearch(value: Boolean) {
         _canSearch.value = value
     }
-
 
     fun setSearchFieldVisible(value: Boolean) {
         _searchFieldVisible.value = value
@@ -61,6 +67,4 @@ class SharedViewModel(
 
         _workManager.enqueue(request)
     }
-
-
 }

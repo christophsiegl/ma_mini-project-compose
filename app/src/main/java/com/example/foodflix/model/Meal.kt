@@ -17,5 +17,7 @@ data class Meal(
     val strMeal: String,
     @ColumnInfo(name = "strMealThumb")
     @Json(name = "strMealThumb")
-    val strMealThumb: String
+    val strMealThumb: String,
+    @ColumnInfo(name = "isFavouriteMeal")
+    val isFavouriteMeal: Boolean = false,
 ) : Parcelable

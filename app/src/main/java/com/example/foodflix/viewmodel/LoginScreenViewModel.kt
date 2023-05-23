@@ -21,28 +21,16 @@ import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
 import com.example.foodflix.R
 import com.example.foodflix.User
-import com.example.foodflix.database.RecipeDatabase
-import com.example.foodflix.repository.RecipeRepository
-import com.example.foodflix.repository.RecipeRepositorySingleton
 import com.example.foodflix.workers.RecipeFetchWorker
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 
 // 1
-class LoginScreenViewModel(
-
-
-) : ViewModel() {
-
+class LoginScreenViewModel() : ViewModel() {
     private val TAG = "MainViewModel"  // 1
     private lateinit var account: Auth0  // 2
     private lateinit var context: Context  // 3
     private var credentialsManager: CredentialsManager? = null
 
     var userImageUrl:String = ""
-
     var user by mutableStateOf(User())
 
     // 2
@@ -98,7 +86,6 @@ class LoginScreenViewModel(
                     userImageUrl = ""
 
                 }
-
             })
     }
 
@@ -118,7 +105,6 @@ class LoginScreenViewModel(
             user = User(credentialsManager!!.awaitCredentials().idToken)
         }
     }
-
 
     fun createWorkManagerTask(requestString: String,email:String) {
         val _workManager = WorkManager.getInstance(context)

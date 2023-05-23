@@ -10,13 +10,15 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "UserData")
 data class UserData(
-    @PrimaryKey()
+    @PrimaryKey
     var email: String,
 
     @ColumnInfo(name = "age")
     var age: Int,
 
+    @ColumnInfo(name = "favouriteRecipesIds")
+    var favouriteRecipesIds: String,
+
     //@ColumnInfo(name = "FavoriteCategory")
     //val favoriteCategory: String
-
 ) : Parcelable

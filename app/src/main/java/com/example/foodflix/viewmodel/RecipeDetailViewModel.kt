@@ -75,8 +75,23 @@ class RecipeDetailViewModel(
         _workManager.enqueue(request)
     }
 
-    private fun setIsFavorite(recipe: Recipes){
-        TODO("Fix favorite stuff")
+    fun setAsFavouriteRecipe(requestString: String, email: String, mealID: String) {
+        val inputData = Data.Builder()
+            .putString("requestType", requestString)
+            .putString("email", email)
+            .putString("mealID", mealID)
+            .build()
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val request = OneTimeWorkRequestBuilder<RecipeFetchWorker>()
+            .setInputData(inputData)
+            .setConstraints(constraints)
+            .build()
+
+        _workManager.enqueue(request)
     }
 
     fun onSaveMovieButtonClicked(recipe: Recipes){
